@@ -1,0 +1,21 @@
+global-styling:
+  version: 1.x
+  header: true
+  css:
+    theme:
+      css/style.css: {}
+      css/poll.css: {}
+      css/tabs.css: {}
+      css/feather.css: {}
+
+
+global-javascript:
+  version: 1.x
+  header: true
+  js:
+    js/meeting.js: {}
+    js/poll.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.ajax

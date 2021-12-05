@@ -1,0 +1,6 @@
+#display_poll table tbody tr td{
+  text-align: center;
+}
+#display_poll table tbody tr td.text-left{
+  text-align: left;
+}
