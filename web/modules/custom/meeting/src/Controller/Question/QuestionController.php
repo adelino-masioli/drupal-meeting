@@ -4,13 +4,11 @@ namespace Drupal\meeting\Controller\Question;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Url;
-use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\meeting\Ajax\RemoveTrCommand;
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Ajax\AjaxResponse;
 use \Symfony\Component\HttpFoundation\Response;
-use Drupal\Component\Serialization\Json;
-use Drupal\Core\Link;
 use Drupal\Core\Render\Markup;
+use Drupal\meeting\Plugin\Helper\Status;
 
 class QuestionController extends ControllerBase
 {
@@ -20,34 +18,34 @@ class QuestionController extends ControllerBase
 
     //create table header
     $header_table = array(
-      'action'          => array('data' => 'Actions', 'class' => ["col-1 text-center"]),
-      'poll_question'   => array('data' => 'Poll question', 'class' => ["col-7 text-center"]),
-      'allow'           => array('data' => 'Allow multiple choice', 'class' => ["col-1 text-center"]),
-      'poll_control'    => array('data' => 'Poll control', 'class' => ["col-1 text-center"]),
-      'results_control' => array('data' => 'Poll control', 'class' => ["col-1 text-center"]),
-      'participant'     => array('data' => 'Participant count', 'class' => ["col-1 text-center"]),
+      'question'   => array('data' => t('Questions'), 'class' => ["col-6 text-center"]),
+      'is_read'    => array('data' => t('Has it been read?'), 'class' => ["col-2 text-center"]),
+      'status'     => array('data' => t('Status'), 'class' => ["col-1 text-center"]),
+      'approve'    => array('data' => t('Approve'), 'class' => ["col-1 text-center"]),
+      'archive'    => array('data' => t('Archive'), 'class' => ["col-1 text-center"]),
+      'delete'     => array('data' => t('Delete'), 'class' => ["col-1 text-center"]),
     );
 
     // get data from database
-    $query = \Drupal::database()->select('poll', 'p');
-    $query->fields('p', ['id','poll_question', 'poll_allow_multiple_choice', 'poll_activate_poll', 'poll_show_results']);
+    $query = \Drupal::database()->select('question_item', 'q');
+    $query->fields('q', ['id', 'meeting_id', 'question_id', 'question', 'is_read', 'status']);
     $query->condition('meeting_id', $id);
+    $query->condition('status', 3, '<');
     $query->orderBy('id','desc');
     $results = $query->execute()->fetchAll();
 
     $rows = array();
     foreach ($results as $data) {
 
-
-
+      $class = $data->status == 0 ? 'btn--primary update-question-ajax' : 'btn--default';
       //get data
       $rows[] = array(
-        'edit'            => Self::actionEdit($data),
-        'poll_question'   => array('data' => $data->poll_question, 'class' => ["text-left"]),
-        'allow'           => Self::buttonControl($data, 'meeting.poll_allow', $data->poll_allow_multiple_choice),
-        'poll_control'    => Self::buttonControl($data, 'meeting.poll_poll_control', $data->poll_activate_poll),
-        'results_control' => Self::buttonControl($data, 'meeting.poll_result_controll', $data->poll_show_results),
-        'participant'     => array('data' => '10', 'class' => ["col-1 text-center"]),
+        'question'   => array('data' => $data->question, 'class' => ["text-left"]),
+        'is_read'    => array('data' => $data->is_read == 0 ? 'No' : 'Yes', 'class' => ["text-center"]),
+        'status'     => array('data' => Status::question_status($data->status), 'class' => ["text-center"]),
+        'approve'    => Self::buttonControl($data, 'meeting.question_update', '<i class=feather-check></i>', 1, $class),
+        'archive'    => Self::buttonControl($data, 'meeting.question_update', '<i class=feather-archive></i>', 2, $class),
+        'delete'     => Self::buttonControl($data, 'meeting.question_update', '<i class=feather-trash></i>', 3, 'btn--primary delete-question-ajax'),
       );
     }
 
@@ -66,67 +64,28 @@ class QuestionController extends ControllerBase
     return $form;
   }
 
-
-  public static function actionEdit($data)
+  public static function buttonControl($data, $url, $label, $status, $class)
   {
-    $url_delete = Url::fromRoute('meeting.poll_delete', ['id' => $data->id]);
-
-    $link_url = Url::fromRoute('meeting.poll_answer_modal', ['id' => $data->id]);;
-    $link_url->setOptions([
-      'attributes' => [
-        'class' => ['use-ajax'],
-        'data-dialog-type' => 'modal',
-        'data-dialog-options' => Json::encode(['width' => '980'])
-      ],
-
-    ]);
-
+    $url = $data->status != 3 ? Url::fromRoute($url)->toString() : null;
     return  array(
       'data' => new FormattableMarkup(
-        '<div class="action-dropdown">
-              <div class="action-link-dropdown">&#8942;</div>
-              <div class="action-item-dropdown">
-                '.Link::fromTextAndUrl(Markup::create('<i class=feather-file-text></i> @name_answer'), $link_url)->toString().'
-                <button class="remove-poll" data-form="poll-form"  data-url=' . $url_delete->toString() . '><i class="feather-trash"></i> @name_delete</button>
-              </div>
-           </div>
-           <button class="btn btn-sm btn--primary edit-poll-ajax" data-poll="@data_edit">@name_edit</button>
-           ',
-        [
-          '@name_edit' => 'Edit', '@data_edit' => json_encode($data),
-          '@name_answer' => 'Answers', '@data_answer' => json_encode($data),
-          '@name_delete' => 'Delete'
-        ]
+        '<button class="btn  btn-sm d-flex m-auto '.$class.'" data-id="@id" data-status="'.$status.'" data-url="'.$url.'">@name</button>',
+        ['@name' => Markup::create($label), '@id' => $data->id]
       )
     );
   }
 
-  public static function buttonControl($data, $url, $field)
+  public function update()
   {
-    $url_poll_control = Url::fromRoute($url);
-    $poll_choice = $field == 1 ? "Yes" : "No";
-    $poll_choice_class = $field == 1 ? "btn--success" : "btn--danger";
-    return  array(
-      'data' => new FormattableMarkup(
-        '<button class="btn poll-control-ajax btn-sm ' . $poll_choice_class . '" data-id="@id" data-url="' . $url_poll_control->toString() . '">@name</button>',
-        ['@name' => $poll_choice, '@id' => $data->id]
-      )
-    );
-  }
-
-
-  public function delete($id)
-  {
+    $id = \Drupal::request()->request->get('id');
+    $status = \Drupal::request()->request->get('status');
 
     $query = \Drupal::database();
-    $query->delete('poll')
+    $query->update('question_item')
+    ->fields(['status' => $status])
     ->condition('id', $id)
       ->execute();
-
     $response = new AjaxResponse();
-
-    $response->addCommand(new RemoveTrCommand('.remove-ajax'));
-
     return $response;
   }
 

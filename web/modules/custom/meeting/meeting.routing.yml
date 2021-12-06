@@ -141,3 +141,28 @@ meeting.question_form:
     _title: "Questions"
   requirements:
     _permission: 'access content'
+
+meeting.question_update:
+  path: "/admin/meeting/question/update"
+  defaults:
+    _title: "Questions"
+    _controller: '\Drupal\meeting\Controller\Question\QuestionController::update'
+  requirements:
+     _access: 'TRUE'
+
+meeting.survey_form:
+  path: "/admin/meeting/{id}/survey"
+  defaults:
+    _form: '\Drupal\meeting\Form\Question\MeetingSurveyForm'
+    _title: "Surveys"
+  requirements:
+    _permission: 'access content'
+
+meeting.info_form:
+  path: "/admin/meeting/{id}/info"
+  defaults:
+    _form: '\Drupal\meeting\Form\Info\MeetingInfoForm'
+    _title: "Infos"
+  requirements:
+    _permission: 'access content'
+

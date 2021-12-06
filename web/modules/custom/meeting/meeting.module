@@ -17,7 +17,15 @@ function meeting_theme($existing, $type, $theme, $path)
       ],
     ),
     'meeting_edit_template' => array(
-      'variables' => array('meeting' => NULL, 'poll' => NULL, 'polls' =>NULL, 'question' => NULL),
+      'variables' => array(
+        'meeting' => NULL,
+        'poll' => NULL,
+        'polls' =>NULL,
+        'question' => NULL,
+        'questions' => NULL,
+        'survey'=>NULL,
+        'info'=>NULL,
+      ),
       'template' => 'html--admin--meeting--edit',
       '#attached' => [
         'library' => [
@@ -236,6 +244,116 @@ function meeting_schema()
     ),
   );
 
+  $schema['question_item'] = array(
+    'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'meeting_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'question_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'question' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'is_read' => array(
+        'type' => 'int',
+        'length' => 20,
+        'not null' => FALSE,
+      ),
+      'status' => array(
+        'type' => 'int',
+        'length' => 20,
+        'not null' => FALSE,
+      )
+    ),
+    'primary key' => array(
+      'id',
+    ),
+  );
+
+
+
+  $schema['survey'] = array(
+    'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'meeting_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'title' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'description' => array(
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => FALSE,
+      ),
+      'url' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array(
+      'id',
+    ),
+  );
+
+  $schema['info'] = array(
+    'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'meeting_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'title' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'description' => array(
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => FALSE,
+      )
+    ),
+    'primary key' => array(
+      'id',
+    ),
+  );
+
+
   return $schema;
 }
 
@@ -338,6 +456,103 @@ function meeting_install()
       ),
     )
   );
+  $database->schema()->changeField(
+    'question_item',
+    'meeting_id',
+    'meeting_id',
+    array(
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+      'default' => 0,
+    ),
+    array(
+      'foreign keys' => array(
+        'meeting_id' => array(
+          'table' => 'meeting',
+          'columns' => array(
+            'id' => 'id',
+          ),
+          'on update' => 'cascade',
+          'on delete' => 'set null',
+        )
+      ),
+    )
+  );
+
+  $database->schema()->changeField(
+    'question_item',
+    'question_id',
+    'question_id',
+    array(
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+      'default' => 0,
+    ),
+    array(
+      'foreign keys' => array(
+        'question_id' => array(
+          'table' => 'question',
+          'columns' => array(
+            'id' => 'id',
+          ),
+          'on update' => 'cascade',
+          'on delete' => 'set null',
+        )
+      ),
+    )
+  );
+
+  $database->schema()->changeField(
+    'survey',
+    'meeting_id',
+    'meeting_id',
+    array(
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+      'default' => 0,
+    ),
+    array(
+      'foreign keys' => array(
+        'meeting_id' => array(
+          'table' => 'meeting',
+          'columns' => array(
+            'id' => 'id',
+          ),
+          'on update' => 'cascade',
+          'on delete' => 'set null',
+        )
+      ),
+    )
+  );
+
+
+  $database->schema()->changeField(
+    'info',
+    'meeting_id',
+    'meeting_id',
+    array(
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+      'default' => 0,
+    ),
+    array(
+      'foreign keys' => array(
+        'meeting_id' => array(
+          'table' => 'meeting',
+          'columns' => array(
+            'id' => 'id',
+          ),
+          'on update' => 'cascade',
+          'on delete' => 'set null',
+        )
+      ),
+    )
+  );
+
 
 
 
