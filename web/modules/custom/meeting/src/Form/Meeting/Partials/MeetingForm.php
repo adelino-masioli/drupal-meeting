@@ -3,8 +3,7 @@
 namespace Drupal\meeting\Form\Meeting\Partials;
 
 use Drupal\Core\Url;
-use Drupal\Component\Serialization\Json;
-use Drupal\Core\Link;
+
 
 class MeetingForm
 {
@@ -102,28 +101,6 @@ class MeetingForm
       '#attributes' => ['class' => 'btn']
     ];
 
-
-    //$form['modal'] =  Self::openModal(Url::fromRoute('meeting.poll_form', ['id' => $data['id']], ['attributes' => ['class' => ['button']]]), 980, 'Open modal');
-
     return $form;
   }
-
-  public static function openModal($url, $width, $label)
-  {
-    $link_url = $url;
-    $link_url->setOptions([
-      'attributes' => [
-        'class' => ['use-ajax', 'btn', 'btn--info'],
-        'data-dialog-type' => 'modal',
-        'data-dialog-options' => Json::encode(['width' => $width]),
-      ]
-    ]);
-
-    return array(
-      '#type' => 'markup',
-      '#markup' => Link::fromTextAndUrl($label, $link_url)->toString(),
-      '#attached' => ['library' => ['core/drupal.dialog.ajax']],
-    );
-  }
-
 }

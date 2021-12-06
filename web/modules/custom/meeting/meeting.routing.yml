@@ -102,3 +102,35 @@ meeting.poll_result_controll:
   requirements:
      _access: 'TRUE'
 
+meeting.poll_answer_form:
+  path: "/admin/meeting/{id}/poll/answer"
+  defaults:
+    _form: '\Drupal\meeting\Form\PollAnswer\MeetingPollAnswerForm'
+    _title: "Poll Answers"
+  requirements:
+    _permission: 'access content'
+
+meeting.poll_answer_modal:
+  path: "/admin/meeting/{id}/poll/answer/modal"
+  defaults:
+    _controller: '\Drupal\meeting\Controller\PollAnswer\PollAnswerModalController::index'
+    _title: "Poll Answers"
+  requirements:
+    _permission: 'access content'
+
+meeting.poll_answer_display_data:
+  path: "/admin/meeting/poll/answer/{id}/{ajax}/list"
+  defaults:
+    _title: "Poll Answers"
+    _controller: '\Drupal\meeting\Controller\PollAnswer\PollAnswerController::get'
+  requirements:
+     _access: 'TRUE'
+
+meeting.poll_answer_delete:
+  path: "/admin/meeting/poll/answer/delete"
+  defaults:
+    _title: "Poll Answer Delete"
+    _controller: '\Drupal\meeting\Controller\PollAnswer\PollAnswerController::delete'
+  requirements:
+     _access: 'TRUE'
+

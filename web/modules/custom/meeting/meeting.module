@@ -26,6 +26,16 @@ function meeting_theme($existing, $type, $theme, $path)
         ],
       ]
     ),
+    'answer_template' => array(
+      'variables' => array('form' => NULL, 'answers' => NULL),
+      'template' => 'html--admin--aswer--modal',
+      '#attached' => [
+        'library' => [
+          'meeting/global-styling',
+          'meeting/global-javascript',
+        ],
+      ]
+    ),
   );
 }
 
@@ -125,7 +135,7 @@ function meeting_schema()
       ),
       'poll_question' => array(
         'type' => 'varchar',
-        'length' => 32,
+        'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
@@ -155,13 +165,55 @@ function meeting_schema()
     ),
   );
 
+  $schema['poll_answer'] = array(
+    'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'meeting_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'poll_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'answer' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'vote' => array(
+        'type' => 'int',
+        'length' => 20,
+        'not null' => FALSE,
+      ),
+      'poll_answer_status' => array(
+        'type' => 'int',
+        'length' => 20,
+        'not null' => FALSE,
+      )
+    ),
+    'primary key' => array(
+      'id',
+    ),
+  );
+
   return $schema;
 }
 
 
 function meeting_install()
 {
-  \Drupal::database()->schema()->changeField('poll',
+  $database = \Drupal::database();
+  $database->schema()->changeField('poll',
     'meeting_id',
     'meeting_id', array(
       'type' => 'int',
@@ -182,4 +234,55 @@ function meeting_install()
       ),
       )
     );
+
+  $database->schema()->changeField(
+    'poll_answer',
+    'meeting_id',
+    'meeting_id',
+    array(
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+      'default' => 0,
+    ),
+    array(
+      'foreign keys' => array(
+        'meeting_id' => array(
+          'table' => 'meeting',
+          'columns' => array(
+            'id' => 'id',
+          ),
+          'on update' => 'cascade',
+          'on delete' => 'set null',
+        )
+      ),
+    )
+  );
+
+  $database->schema()->changeField(
+    'poll_answer',
+    'poll_id',
+    'poll_id',
+    array(
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+      'default' => 0,
+    ),
+    array(
+      'foreign keys' => array(
+        'poll_id' => array(
+          'table' => 'poll',
+          'columns' => array(
+            'id' => 'id',
+          ),
+          'on update' => 'cascade',
+          'on delete' => 'set null',
+        )
+      ),
+    )
+  );
+
+
+
 }

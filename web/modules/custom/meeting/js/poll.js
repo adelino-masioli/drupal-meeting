@@ -53,17 +53,17 @@
   });
 
   $(document).on("click", ".action-dropdown", function (event) {
-    $(".dropdown-active").find(".action-item-dropdown").stop().slideUp(200);
+    $(".dropdown-active").find(".action-item-dropdown").stop().slideUp(400);
     $(".action-dropdown").removeClass("dropdown-active");
 
-    $(this).find(".action-item-dropdown").stop().slideDown(200);
+    $(this).find(".action-item-dropdown").stop().slideDown(400);
     $(this).addClass("dropdown-active");
 
     event.preventDefault();
   });
 
   $(document).on("mouseleave", ".action-dropdown", function (event) {
-    $(".dropdown-active").find(".action-item-dropdown").stop().slideUp(200);
+    $(".dropdown-active").find(".action-item-dropdown").stop().slideUp(400);
     $(".action-dropdown").removeClass("dropdown-active");
 
     event.preventDefault();

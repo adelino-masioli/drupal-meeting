@@ -979,10 +979,10 @@ input.active.focus {
   appearance: none;
   -webkit-font-smoothing: antialiased;
 }
-.btn-sm{
-   padding: calc(0.5rem - 1px) calc(0.5rem - 1px);
-   margin:0;
-   font-size: 0.9rem;
+.btn-sm {
+  padding: calc(0.5rem - 1px) calc(0.5rem - 1px);
+  margin: 0;
+  font-size: 0.9rem;
 }
 
 /* Info button styles */
@@ -1004,7 +1004,6 @@ input.active.focus {
   background-color: #5dadec;
 }
 
-
 /* success button styles */
 
 .btn--success {
@@ -1020,7 +1019,6 @@ input.active.focus {
 .btn--success:active {
   background-color: #1d9543;
 }
-
 
 /* Primary button styles */
 
@@ -1133,6 +1131,7 @@ a.btn--danger:active {
   float: left;
   cursor: pointer;
   padding: 4.5px;
+  background-color: #f1f1f1;
 }
 .action-item-dropdown {
   min-width: 150px;
@@ -1140,17 +1139,21 @@ a.btn--danger:active {
   position: absolute;
   border-radius: 5px;
   background: #fff;
- box-shadow: 7px 7px 5px -6px rgba(0,0,0,0.08);
--webkit-box-shadow: 7px 10px 5px -6px rgba(0,0,0,0.08);
--moz-box-shadow: 7px 7px 5px -6px rgba(0,0,0,0.08);
+  box-shadow: 7px 7px 5px -6px rgba(0, 0, 0, 0.08);
+  -webkit-box-shadow: 7px 10px 5px -6px rgba(0, 0, 0, 0.08);
+  -moz-box-shadow: 7px 7px 5px -6px rgba(0, 0, 0, 0.08);
   top: 30px;
   z-index: 3;
   border: 1px solid #f1f1f1;
   color: #666;
+  overflow: hidden;
 }
 .action-dropdown button,
 .action-dropdown button:active,
-.action-dropdown button:focus {
+.action-dropdown button:focus,
+.action-dropdown a,
+.action-dropdown a:active,
+.action-dropdown a:focus {
   background: #fff;
   border: 0px;
   outline: none;
@@ -1158,10 +1161,19 @@ a.btn--danger:active {
   font-size: 12px;
   padding: 10px;
   cursor: pointer;
-   color: #666;
-   width: 100%;
-   text-align: left;
+  color: #666;
+  width: 100%;
+  text-align: left;
+  text-decoration: none;
+  float: left;
 }
-.action-dropdown button:hover {
+.action-dropdown button:hover,
+.action-dropdown a:hover {
   background: #f9f9f9;
+}
+.d-flex{
+  display: flex;
+}
+.m-auto{
+  margin: auto;
 }

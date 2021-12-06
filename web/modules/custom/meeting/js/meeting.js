@@ -55,6 +55,7 @@
    */
   Drupal.AjaxCommands.prototype.load_partial = function (ajax, response, status) {
     var renderDiv = response.div;
+
     $.ajax({
       url: response.url,
       type: "GET",
