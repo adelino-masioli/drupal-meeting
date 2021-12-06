@@ -25,7 +25,8 @@ class MeetingEditController extends ControllerBase
       '#type'   => 'markup',
       '#meeting'   => $this->formBuilder()->getForm('Drupal\meeting\Form\Meeting\MeetingEditForm', $id),
       '#poll'   => $this->formBuilder()->getForm('Drupal\meeting\Form\Poll\MeetingPollForm', $id),
-      '#polls'   => PollController::get($id)
+      '#polls'   => PollController::get($id),
+      '#question'   => $this->formBuilder()->getForm('Drupal\meeting\Form\Question\MeetingQuestionForm', $id),
     ];
 
     return $form;

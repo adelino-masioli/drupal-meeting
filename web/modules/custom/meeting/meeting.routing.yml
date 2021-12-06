@@ -134,3 +134,10 @@ meeting.poll_answer_delete:
   requirements:
      _access: 'TRUE'
 
+meeting.question_form:
+  path: "/admin/meeting/{id}/question"
+  defaults:
+    _form: '\Drupal\meeting\Form\Question\MeetingQuestionForm'
+    _title: "Questions"
+  requirements:
+    _permission: 'access content'

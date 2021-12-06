@@ -1108,7 +1108,7 @@ a.btn--danger:active {
 }
 
 /*meeting form*/
-#edit-meeting-description-format {
+#edit-meeting-description-format, #edit-description-format {
   display: none;
 }
 .meeting-form #ajax-wrapper,
