@@ -16,6 +16,7 @@ global-javascript:
     js/meeting.js: {}
     js/poll.js: {}
     js/answer.js: {}
+    js/question.js: {}
   dependencies:
     - core/jquery
     - core/drupal
