@@ -12,6 +12,12 @@
     event.preventDefault();
   });
 
+
+
+  $(document).on("click", ".form-poll", function (event) {
+    event.preventDefault();
+  });
+
   $(document).on("click", ".remove-poll", function (event) {
     var tr = this;
     $.ajax({

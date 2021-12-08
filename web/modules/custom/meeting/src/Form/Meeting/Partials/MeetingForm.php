@@ -24,6 +24,7 @@ class MeetingForm
       '#default_value' => (isset($data['id'])) ? $data['id'] : '',
     ];
 
+
     $form['fields'] = [
       '#type'  => 'container',
       '#open'  => true,
@@ -39,6 +40,7 @@ class MeetingForm
       '#type'  => 'container',
       '#attributes' => ['class' => 'row']
     ];
+
 
     $form['fields']['box']['row']['meeting_name'] = [
       '#type' => 'textfield',
@@ -121,16 +123,16 @@ class MeetingForm
     $form['fields']['box']['row']['meeting_results_background'] = array(
       '#title' =>  'Results background image',
       '#description' => 'Choose Image gif png jpg jpeg',
-      '#type' => 'managed_file',
+      '#type' => 'managed_image',
       '#default_value' => (isset($data['fid'])) ? [$data['fid']] : [],
       '#upload_location' => 'public://images/',
       '#wrapper_attributes' => ['class' => 'col-xs-12 col-sm-12 col-md-12 col-lg-12'],
       '#attributes' => ['class' => ['col-full']],
+      '#image_style' => 'wide',
       '#upload_validators' => array(
         'file_validate_extensions' => array('gif png jpg jpeg')
       )
     );
-
 
 
     $form['meeting_status'] = [
@@ -138,8 +140,6 @@ class MeetingForm
       '#title' => 'Published',
       '#default_value' => (isset($data['meeting_status'])) ? $data['meeting_status'] : '',
     ];
-
-
 
 
     $form['submit'] = [

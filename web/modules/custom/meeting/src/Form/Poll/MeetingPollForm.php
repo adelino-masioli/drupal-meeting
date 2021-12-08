@@ -62,7 +62,7 @@ class MeetingPollForm extends FormBase
 
     $form['fields']['box']['row']['message'] = [
       '#type' => 'markup',
-      '#markup' => '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 result-message"></div>'
+      '#markup' => '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 result-poll-message"></div>'
     ];
 
     $form['fields']['box']['row']['id'] = [
@@ -89,7 +89,7 @@ class MeetingPollForm extends FormBase
       '#value' => $this->t('Save'),
       '#ajax' => [
         'callback' => '::promptCallback',
-      ],
+      ]
     ];
 
   //  $form['fields']['box']['row']['display_data'] = [
@@ -161,7 +161,7 @@ class MeetingPollForm extends FormBase
       $response = new AjaxResponse();
       $response->addCommand(
         new HtmlCommand(
-          '.result-message',
+          '.result-poll-message',
           $renderer->renderRoot($status_messages)
         ),
       );
@@ -173,7 +173,7 @@ class MeetingPollForm extends FormBase
 
       $response->addCommand(
         new HtmlCommand(
-          '.result-message',
+          '.result-poll-message',
           $messages
         ),
       );

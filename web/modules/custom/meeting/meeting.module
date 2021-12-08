@@ -48,6 +48,10 @@ function meeting_theme($existing, $type, $theme, $path)
       'template' => 'inputcolour-form',
       'render element' => 'element'
     ),
+    'thumb_upload' => array(
+      'template' => 'thumb-upload',
+      'render element' => 'element',
+    ),
   );
 }
 
