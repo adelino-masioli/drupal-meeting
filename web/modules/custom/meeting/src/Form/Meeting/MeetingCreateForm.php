@@ -2,37 +2,44 @@
 
 namespace Drupal\meeting\Form\Meeting;
 
-use Drupal\Core\Database\Database;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\meeting\Form\Meeting\Partials\MeetingForm;
 
-class MeetingEditForm extends FormBase
+class MeetingCreateForm extends FormBase
 {
 
   /**
-   * {@inheritdoc}
+   * getFormId
+   *
+   * @return void
    */
-
   public function getFormId()
   {
     return 'meeting_form';
   }
-
-  public function buildForm(array $form, FormStateInterface $form_state, $id = NULL)
+  /**
+   * Undocumented function
+   *
+   * @param array $form
+   * @param FormStateInterface $form_state
+   * @return void
+   */
+  public function buildForm(array $form, FormStateInterface $form_state)
   {
-    $data =  $this->getCurrentRegister('meeting', 'm', $id);
-    $form = MeetingForm::partialForm($form, $form_state, $data);
+    $form = MeetingForm::partialForm($form, $form_state, null);
 
     return $form;
   }
 
-
   /**
+   * Undocumented function
+   *
    * @param array $form
    * @param FormStateInterface $form_state
+   * @return void
    */
   public function validateForm(array &$form, FormStateInterface $form_state)
   {
@@ -41,11 +48,19 @@ class MeetingEditForm extends FormBase
     }
   }
 
+  /**
+   * Undocumented function
+   *
+   * @param array $form
+   * @param FormStateInterface $form_state
+   * @return void
+   */
   public function submitForm(array &$form, FormStateInterface $form_state)
   {
     //get picture id
     $picture = $form_state->getValue('meeting_results_background');
 
+    //array data to insert on database
     $data = array(
       'meeting_name'                      =>  $form_state->getValue('meeting_name'),
       'meeting_description'               =>  $form_state->getValue('meeting_description')['value'],
@@ -67,37 +82,14 @@ class MeetingEditForm extends FormBase
       $file->save();
     }
 
-    \Drupal::database()->update('meeting')->fields($data)->condition('id', $form_state->getValue('id'))->execute();
+    //create new meeting and get last id
+    $meeting = \Drupal::database()->insert('meeting')->fields($data)->execute();
 
     // show message and redirect to list page
     \Drupal::messenger()->addStatus('Succesfully saved');
-
-    $url = Url::fromRoute('meeting.edit_form', ['id' => $form_state->getValue('id')]);
+    $url = Url::fromRoute('meeting.edit_form', ['id' => $meeting]);
     $form_state->setRedirectUrl($url);
 
     return;
   }
-
-  /**
-   * Undocumented function
-   *
-   * @param [type] $database
-   * @param [type] $alias
-   * @param [type] $id
-   * @return void
-   */
-  public function getCurrentRegister($database, $alias, $id)
-  {
-    $conn = Database::getConnection();
-    $data = array();
-    if (isset($id)) {
-      $query = $conn->select($database, $alias)
-        ->condition('id', $id)
-        ->fields($alias);
-      $data = $query->execute()->fetchAssoc();
-    }
-
-    return $data;
-  }
-
 }

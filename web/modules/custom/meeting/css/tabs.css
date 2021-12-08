@@ -68,3 +68,17 @@
     padding: 15px;
   }
 }
+
+ #tabs label.disabled:hover, #tabs label.disabled{
+  cursor: default;
+  opacity: 0.5;
+  color: #bbb;
+}
+ #tabs input:checked + label.disabled {
+  border-top: 2px solid #bbb;
+   color: #bbb;
+}
+
+#tabs section.disabled {
+    border-top: 1px solid #eee;
+}

@@ -21,7 +21,7 @@ class MeetingForm
   {
     $form['id'] = [
       '#type' => 'hidden',
-      '#default_value' => $data['id'],
+      '#default_value' => (isset($data['id'])) ? $data['id'] : '',
     ];
 
     $form['fields'] = [
@@ -67,7 +67,58 @@ class MeetingForm
       '#attributes' => ['placeholder' =>'Meeting description', 'class' => ['col-full']]
     ];
 
-    $form['fields']['box']['row']['picture'] = array(
+    $form['fields']['box']['row']['meeting_background_colour'] = [
+      '#type' => 'color',
+      '#title' => t('Meeting background colour'),
+      '#default_value' => (isset($data['meeting_background_colour'])) ? $data['meeting_background_colour'] : '#ffffff',
+      '#wrapper_attributes' => ['class' => 'col-xs-12 col-sm-6 col-md-6 col-lg-6'],
+      '#attributes' => ['placeholder' => 'Meeting background colour', 'class' =>   ['col-full']],
+    ];
+
+    $form['fields']['box']['row']['meeting_text_colour'] = [
+      '#type' => 'color',
+      '#title' => t('Meeting text colour'),
+      '#default_value' => (isset($data['meeting_text_colour'])) ? $data['meeting_text_colour'] : '#000000',
+      '#wrapper_attributes' => ['class' => 'col-xs-12 col-sm-6 col-md-6 col-lg-6'],
+      '#attributes' => ['placeholder' => 'Meeting text colour', 'class' =>   ['col-full']],
+    ];
+
+
+    $form['fields']['box']['row']['meeting_button_background_colour'] = [
+      '#type' => 'color',
+      '#title' => t('Meeting button background colour'),
+      '#default_value' => (isset($data['meeting_button_background_colour'])) ? $data['meeting_button_background_colour'] : '#000000',
+      '#wrapper_attributes' => ['class' => 'col-xs-12 col-sm-6 col-md-6 col-lg-6'],
+      '#attributes' => ['placeholder' => 'Meeting button background colour', 'class' =>   ['col-full']],
+    ];
+
+
+    $form['fields']['box']['row']['meeting_button_text_colour'] = [
+      '#type' => 'color',
+      '#title' => 'Meeting button text colour',
+      '#default_value' => (isset($data['meeting_button_text_colour'])) ? $data['meeting_button_text_colour'] :'#ffffff',
+      '#wrapper_attributes' => ['class' => 'col-xs-12 col-sm-6 col-md-6 col-lg-6'],
+      '#attributes' => ['placeholder' => 'Meeting button text colour', 'class' =>   ['col-full']]
+    ];
+
+    $form['fields']['box']['row']['meeting_results_shadow_colour'] = [
+      '#type' => 'color',
+      '#title' => 'Meeting results shadow colour',
+      '#default_value' => (isset($data['meeting_results_shadow_colour'])) ? $data['meeting_results_shadow_colour'] : '#cccccc',
+      '#wrapper_attributes' => ['class' => 'col-xs-12 col-sm-6 col-md-6 col-lg-6'],
+      '#attributes' => ['placeholder' => 'Meeting results shadow colour', 'class' =>   ['col-full']]
+    ];
+
+    $form['fields']['box']['row']['meeting_results_bar_colour'] = [
+      '#type' => 'color',
+      '#title' => 'Meeting results bar colour',
+      '#default_value' => (isset($data['meeting_results_bar_colour'])) ? $data['meeting_results_bar_colour'] : '#000000',
+      '#wrapper_attributes' => ['class' => 'col-xs-12 col-sm-6 col-md-6 col-lg-6'],
+      '#attributes' => ['placeholder' => 'Meeting results bar colour', 'class' =>   ['col-full']]
+    ];
+
+
+    $form['fields']['box']['row']['meeting_results_background'] = array(
       '#title' =>  'Results background image',
       '#description' => 'Choose Image gif png jpg jpeg',
       '#type' => 'managed_file',
@@ -81,6 +132,7 @@ class MeetingForm
     );
 
 
+
     $form['meeting_status'] = [
       '#type' => 'checkbox',
       '#title' => 'Published',
@@ -88,11 +140,14 @@ class MeetingForm
     ];
 
 
+
+
     $form['submit'] = [
       '#type' => 'submit',
       '#value' => 'Save',
-      '#attributes' => ['class' =>   ['button', 'button--primary']]
+      '#attributes' => ['class' =>   ['button', 'button--primary']],
     ];
+
 
     $form['link'] = [
       '#title' =>  'Cancel',

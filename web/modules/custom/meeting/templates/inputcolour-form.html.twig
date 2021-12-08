@@ -1,0 +1,17 @@
+<div{{attributes}} class="inputcolour-fields">
+
+
+<span class="color-circle" style="background-color:{{ element['#default_value'] }};"></span>
+
+<input
+  placeholder="Meeting text colour"
+  class="color-full form-text form-element form-element--type-text form-element--api-textfield"
+  data-drupal-selector="edit-meeting-text-colour"
+  type="color"
+  id="edit-meeting-text-colour"
+  name="{{ element["#name"] }}"
+  value="{{ element["#default_value"] }}"
+  size="60"
+  maxlength="128"
+>
+</div>

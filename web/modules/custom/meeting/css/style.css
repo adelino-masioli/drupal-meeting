@@ -1177,3 +1177,40 @@ a.btn--danger:active {
 .m-auto{
   margin: auto;
 }
+
+/*custom placeholder*/
+.placeholder .ph-row div, .placeholder .ph-picture {
+    background-color: #f1f1f1;
+}
+.placeholder .ph-item {
+    border: 0px solid #e6e6e6;
+    margin-bottom: 0px;
+    padding: 0px;
+}
+.placeholder .ph-item>* {
+    margin-bottom: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.placeholder .ph-item>* .field {
+    min-height: 3rem;
+}
+.placeholder .ph-item>* .ph-col-1 {
+   width: 5px;
+   display: block;
+}
+
+/*color-circle*/
+.color-full {
+  width: calc(100% - 3.5rem);
+  min-width: calc(100% - 3.5rem);
+  max-width:calc(100% - 3.5rem)!important;
+  float: right;
+}
+.color-circle{
+  float: left;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50px;
+  border: 1px solid #8e929c;
+}
