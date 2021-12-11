@@ -1108,7 +1108,10 @@ a.btn--danger:active {
 }
 
 /*meeting form*/
-#edit-meeting-description-format, #edit-description-format {
+#edit-meeting-description-format,
+#edit-description-format,
+#edit-description-format--3,
+#edit-description-format--5 {
   display: none;
 }
 .meeting-form #ajax-wrapper,
@@ -1171,46 +1174,202 @@ a.btn--danger:active {
 .action-dropdown a:hover {
   background: #f9f9f9;
 }
-.d-flex{
+.d-flex {
   display: flex;
 }
-.m-auto{
+.m-auto {
   margin: auto;
 }
 
 /*custom placeholder*/
-.placeholder .ph-row div, .placeholder .ph-picture {
-    background-color: #f1f1f1;
+.placeholder .ph-row div,
+.placeholder .ph-picture {
+  background-color: #f1f1f1;
 }
 .placeholder .ph-item {
-    border: 0px solid #e6e6e6;
-    margin-bottom: 0px;
-    padding: 0px;
+  border: 0px solid #e6e6e6;
+  margin-bottom: 0px;
+  padding: 0px;
 }
-.placeholder .ph-item>* {
-    margin-bottom: 0px;
-    padding-left: 0px;
-    padding-right: 0px;
+.placeholder .ph-item > * {
+  margin-bottom: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
 }
-.placeholder .ph-item>* .field {
-    min-height: 3rem;
+.placeholder .ph-item > * .field {
+  min-height: 3rem;
 }
-.placeholder .ph-item>* .ph-col-1 {
-   width: 5px;
-   display: block;
+.placeholder .ph-item > * .ph-col-1 {
+  width: 5px;
+  display: block;
+}
+
+.template-meeting .cke_contents, .meeting-form .cke_contents{
+  min-height: 100px !important;
+  max-height: 100px !important;
+}
+
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  height: 23px;
+  background-color: #ccc;
+  border-radius: 30px;
+  border: 2px solid #ccc;
+}
+
+/* After slide changes */
+.toggle:after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 1px solid #ffffff;
+  top: 0px;
+  left: 0px;
+  transition: all 0.5s;
+  box-shadow: 1px 1px 0px 0px rgba(0, 0, 0, 0.25);
+  -webkit-box-shadow: 1px 1px 0px 0px rgba(0, 0, 0, 0.25);
+  -moz-box-shadow: 1px 1px 0px 0px rgba(0, 0, 0, 0.25);
+}
+
+/* Toggle text */
+.toggle p {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  font-size: 8px;
+  margin: 5px auto;
+  color: #fff;
+  display: flex;
+  width: 95%;
+  justify-content: space-around;
+  align-items: center;
+}
+
+/* Checkbox checked effect */
+.checkbox:checked + .toggle::after {
+  left: 23px;
+}
+
+/* Checkbox checked toggle label bg color */
+.checkbox:checked + .toggle {
+  background-color: #27a243;
+  border: 2px solid #27a243;
+}
+
+/* Checkbox vanished */
+.checkbox {
+  display: none;
+}
+
+.btn-activate-module {
+  position: absolute;
+  right: 0px;
+  top: 6px;
+}
+
+/*table*/
+.template-meeting table thead th {
+  font-size: 0.889rem;
+  padding: 0.5rem;
 }
 
 /*color-circle*/
 .color-full {
   width: calc(100% - 3.5rem);
   min-width: calc(100% - 3.5rem);
-  max-width:calc(100% - 3.5rem)!important;
+  max-width: calc(100% - 3.5rem) !important;
   float: right;
 }
-.color-circle{
+.component-color {
+  width: 100%;
+  min-width: 100%;
+  max-width: 100% !important;
+  float: left;
+  background-color: #f1f1f1;
+  border-radius: 0.125rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #8e929c;
+}
+.component-color:hover {
+  border-color: #222330;
+  box-shadow: inset 0 0 0 1px #222330;
+}
+.component-color .box {
   float: left;
   width: 3rem;
-  height: 3rem;
+  height: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f1f1f1;
+  border-top-left-radius: 0.125rem;
+  border-bottom-left-radius: 0.125rem;
+}
+.component-color span {
+  float: left;
+  width: calc(100% - 3rem);
+  background-color: #ffffff;
+  height: 45px;
+  border-top-right-radius: 0.125rem;
+  border-bottom-right-radius: 0.125rem;
+  padding-left: 10px;
+  display: flex;
+  align-items: center;
+}
+.color-circle {
+  float: left;
+  width: 1.5rem;
+  height: 1.5rem;
   border-radius: 50px;
-  border: 1px solid #8e929c;
+  overflow: hidden;
+}
+.color-circle [type="color"] {
+  border: 0;
+  padding: 0;
+  width: 200%;
+  height: 200%;
+  cursor: pointer;
+  transform: translate(-25%, -25%);
+}
+
+/*thumb*/
+.box-thumb  div:first-child  {
+  width: 100%;
+  min-width: 100%;
+}
+.box-thumb  div .form-element {
+  width: 100%;
+  min-width: 100%;
+}
+.form-item--meeting-results-background .file--image {
+  float: left;
+  margin: 10px 0 0 0;
+}
+
+.form-item--meeting-results-background .file--image a {
+  text-decoration: none;
+  color: #545560;
+  font-size: 1rem;
+}
+
+.form-item--meeting-results-background .file--image span {
+  color: #545560;
+}
+
+.form-item--meeting-results-background .button {
+  float: right;
+  margin-right: 0;
+  padding: 10px 20px;
+}
+
+.form-item--meeting-results-background .form-item__description {
+  float: left;
+  width: 70%;
+  font-size: 0.6rem;
 }

@@ -55,6 +55,8 @@ function meeting_theme($existing, $type, $theme, $path)
   );
 }
 
+
+
 function meeting_preprocess_inputcolour_form(&$variables)
 {
   $element = $variables['element'];
@@ -96,12 +98,17 @@ function meeting_preprocess_breadcrumb(&$variables)
   }
 }
 
+function meeting_ckeditor_css_alter(&$css, $editor)
+{
+  $css[] = drupal_get_path('module', 'meeting') . '/css/components/text-content.css';
+}
+
 
 function meeting_editor_js_settings_alter(array &$settings)
 {
   foreach (array_keys($settings['editor']['formats']) as $text_format_id) {
     if ($settings['editor']['formats'][$text_format_id]['editor'] === 'ckeditor') {
-      $settings['editor']['formats'][$text_format_id]['editorSettings']['autoGrow_minHeight'] = '100';
+      $settings['editor']['formats'][$text_format_id]['editorSettings']['autoGrow_minHeight'] = '300';
     }
   }
 }

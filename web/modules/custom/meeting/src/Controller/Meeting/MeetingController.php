@@ -6,6 +6,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 
+
 class MeetingController extends ControllerBase
 {
 
@@ -14,27 +15,38 @@ class MeetingController extends ControllerBase
     $form['form'] = $this->formBuilder()->getForm('Drupal\meeting\Form\Meeting\MeetingfilterForm');
 
     //create table header
-    $header_table = array(
-      'id'                  => array('data' => $this->t('ID'), 'field' => 'id', 'sort' => 'desc', 'class' => ["col-1"]),
-      'meeting_name'        => array('data' => $this->t('Meeting name'), 'class' => ["col-8"]),
-      'view'                => array('data' => $this->t('View'), 'class' => ["col-1"]),
-      'edit'                => array('data' => $this->t('Edit'), 'class' => ["col-1"]),
-      'delete'              => array('data' => $this->t('Delete'), 'class' => ["col-1"]),
+    $header = array(
+      array(
+        'data'  => $this->t('Meeting name'),
+        'field' => 'm.meeting_name',
+        'class' => ['col-9 text-center'],
+      ),
+      array(
+        'data'  => $this->t('View'),
+        'class' => ['col-1 text-center'],
+      ),
+      array(
+        'data'  => $this->t('Edit'),
+        'class' => ['col-1 text-center'],
+      ),
+      array(
+        'data'  => $this->t('Delete'),
+        'class' => ['col-1 text-center'],
+      ),
     );
 
     // get data from database
     $query = \Drupal::database()->select('meeting', 'm');
-    $query->fields('m', ['id', 'meeting_name', 'meeting_description', 'meeting_url_video']);
+    $query->fields('m');
+    $query->extend('Drupal\Core\Database\Query\TableSortExtender')->orderByHeader($header);
 
-    if(\Drupal::request()->query->get('sort')){
-      $query->orderBy(\Drupal::request()->query->get('order'), \Drupal::request()->query->get('sort'));
+    if (\Drupal::request()->query->get('search')) {
+      $orGroup = $query->orConditionGroup()
+        ->condition('m.id', trim(\Drupal::request()->query->get('search')))
+        ->condition('m.meeting_name', trim(\Drupal::request()->query->get('search')));
+      $query->condition($orGroup);
     }
-
-
-    if(\Drupal::request()->query->get('meeting_name')){
-      $query->condition('meeting_name', trim(\Drupal::request()->query->get('meeting_name')));
-    }
-    $results = $query->execute()->fetchAll();
+    $results = $query->execute();
 
     $rows = array();
     foreach ($results as $data) {
@@ -47,24 +59,20 @@ class MeetingController extends ControllerBase
 
       //get data
       $rows[] = array(
-        'id'                  => $data->id,
-        'meeting_name'        => $data->meeting_name,
-        'view'                => $linkView,
-        'edit'                => $linkEdit,
-        'delete'              => $linkDelete,
+        ['data'      => $data->meeting_name, 'class' => ['text-left']],
+        ['data'      => $linkView, 'class' => ['text-center']],
+        ['data'      => $linkEdit, 'class' => ['text-center']],
+        ['data'      => $linkDelete, 'class' => ['text-center']],
       );
     }
 
     // render table
     $form['table'] = [
-      #'#theme' => 'meeting_template',
       '#type'   => 'table',
-      '#header' => $header_table,
+      '#header' => $header,
       '#rows'   => $rows,
       '#empty'  => $this->t('No data found'),
     ];
     return $form;
   }
-
-
 }

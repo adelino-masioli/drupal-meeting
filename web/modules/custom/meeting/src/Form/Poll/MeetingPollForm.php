@@ -11,6 +11,7 @@ use Drupal\file\Entity\File;
 use Drupal\meeting\Controller\Poll\PollController;
 use Drupal\meeting\Ajax\LoadPartialCommand;
 use Drupal\Core\Url;
+use Drupal\meeting\Plugin\Helper\Component;
 
 class MeetingPollForm extends FormBase
 {
@@ -50,10 +51,17 @@ class MeetingPollForm extends FormBase
       '#attributes' => ['class' => 'row']
     ];
 
+
     $form['fields']['box'] = [
       '#type'  => 'container',
       '#attributes' => ['class' => 'col-xs-12 col-sm-12 col-md-12col-lg-12']
     ];
+
+    $form['fields']['box']['ck'] = [
+      '#type' => 'markup',
+      '#markup' => Component::checkbox('activate_poll_', 'module-activate-ajax', 'btn-activate-module', null, null, null)
+    ];
+
 
     $form['fields']['box']['row'] = [
       '#type'  => 'container',
@@ -70,9 +78,6 @@ class MeetingPollForm extends FormBase
       '#attributes' => ['data-selector-id' => 'poll-id']
     ];
 
-
-
-
     $form['fields']['box']['row']['poll_question'] = [
       '#type' => 'textfield',
       '#title' => 'Poll question',
@@ -84,66 +89,19 @@ class MeetingPollForm extends FormBase
       '#attributes' => ['placeholder' => 'Type your question here', 'class' => ['col-full']],
     ];
 
-    $form['actions']['submit'] = [
+    $form['actions'] = [
       '#type' => 'submit',
       '#value' => $this->t('Save'),
+      '#attributes' => ['class' => ['action_ajax']],
       '#ajax' => [
         'callback' => '::promptCallback',
       ]
     ];
 
-  //  $form['fields']['box']['row']['display_data'] = [
-  //     '#type' => 'container',
-  //     '#open'  => true,
-  //     '#attributes' => ['id' => 'display_poll']
-  //   ];
-    // $form['fields']['box']['row']['display_data']['poll'] = PollController::get($id);
-
     return $form;
   }
 
 
-  /**
-   * Undocumented function
-   *
-   * @param array $form
-   * @param FormStateInterface $form_state
-   * @return void
-   */
-  public function submitForm(array &$form, FormStateInterface $form_state)
-  {
-
-    //get picture id
-    $picture = $form_state->getValue('picture');
-
-    //array data to insert on database
-    $data = array(
-      'meeting_id'        =>  $form_state->getValue('meeting_id'),
-      'poll_question'     =>  $form_state->getValue('poll_question')
-    );
-
-    // save file as Permanent
-    if (isset($picture[0])) {
-      $file = File::load($picture[0]);
-      $file->setPermanent();
-      $file->save();
-    }
-
-    if($form_state->getValue('id')){
-      $query = \Drupal::database();
-      $query->update('poll')
-        ->fields($data)
-        ->condition('id', $form_state->getValue('id'))
-        ->execute();
-
-    }else{
-      //create new meeting and get last id
-      \Drupal::database()->insert('poll')->fields($data)->execute();
-    }
-
-
-    $form_state->setRebuild();
-  }
 
   /**
    * Undocumented function
@@ -183,6 +141,49 @@ class MeetingPollForm extends FormBase
 
     return $response;
   }
+
+
+  /**
+   * Undocumented function
+   *
+   * @param array $form
+   * @param FormStateInterface $form_state
+   * @return void
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state)
+  {
+
+    //get picture id
+    $picture = $form_state->getValue('picture');
+
+    //array data to insert on database
+    $data = array(
+      'meeting_id'        =>  $form_state->getValue('meeting_id'),
+      'poll_question'     =>  $form_state->getValue('poll_question')
+    );
+
+    // save file as Permanent
+    if (isset($picture[0])) {
+      $file = File::load($picture[0]);
+      $file->setPermanent();
+      $file->save();
+    }
+
+    if ($form_state->getValue('id')) {
+      $query = \Drupal::database();
+      $query->update('poll')
+      ->fields($data)
+        ->condition('id', $form_state->getValue('id'))
+        ->execute();
+    } else {
+      //create new meeting and get last id
+      \Drupal::database()->insert('poll')->fields($data)->execute();
+    }
+
+
+    $form_state->setRebuild();
+  }
+
 
   /**
    * Undocumented function
