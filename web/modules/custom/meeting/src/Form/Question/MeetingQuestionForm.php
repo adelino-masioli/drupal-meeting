@@ -11,6 +11,7 @@ use Drupal\file\Entity\File;
 use Drupal\meeting\Controller\Poll\PollController;
 use Drupal\meeting\Ajax\LoadPartialCommand;
 use Drupal\Core\Url;
+use Drupal\meeting\Plugin\Helper\Component;
 
 class MeetingQuestionForm extends FormBase
 {
@@ -52,6 +53,12 @@ class MeetingQuestionForm extends FormBase
       '#attributes' => ['class' => 'col-xs-12 col-sm-12 col-md-12col-lg-12']
     ];
 
+    $form['fields']['box']['ck'] = [
+      '#type' => 'markup',
+      '#markup' => Component::checkbox('activate_question_', 'module-activate-ajax', 'btn-activate-module', null, null, null)
+    ];
+
+
     $form['fields']['box']['row'] = [
       '#type'  => 'container',
       '#attributes' => ['class' => 'row']
@@ -92,9 +99,10 @@ class MeetingQuestionForm extends FormBase
       '#attributes' => ['placeholder' => 'Question description', 'class' => ['col-full']]
     ];
 
-    $form['actions']['submit'] = [
+    $form['actions']= [
       '#type' => 'submit',
       '#value' => $this->t('Save'),
+      '#attributes' => ['class' => ['action_ajax']],
       '#ajax' => [
         'callback' => '::promptCallback',
       ],

@@ -15,3 +15,7 @@ regions:
   footer_second: Footer Second
   footer_third: Footer Third
   footer_bottom: Footer Bottom
+
+ckeditor_stylesheets:
+  - css/theme/ckeditor-frame.css
+  - css/components/text-content.css

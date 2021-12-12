@@ -7,7 +7,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
-
+use Drupal\meeting\Plugin\Helper\Component;
 
 class MeetingSurveyForm extends FormBase
 {
@@ -48,6 +48,13 @@ class MeetingSurveyForm extends FormBase
       '#type'  => 'container',
       '#attributes' => ['class' => 'col-xs-12 col-sm-12 col-md-12col-lg-12']
     ];
+
+
+    $form['fields']['box']['ck'] = [
+      '#type' => 'markup',
+      '#markup' => Component::checkbox('activate_survey_', 'module-activate-ajax', 'btn-activate-module', null, null, null)
+    ];
+
 
     $form['fields']['box']['row'] = [
       '#type'  => 'container',
@@ -101,9 +108,10 @@ class MeetingSurveyForm extends FormBase
     ];
 
 
-    $form['actions']['submit'] = [
+    $form['actions'] = [
       '#type' => 'submit',
       '#value' => $this->t('Save'),
+      '#attributes' => ['class' => ['action_ajax']],
       '#ajax' => [
         'callback' => '::promptCallback',
       ],

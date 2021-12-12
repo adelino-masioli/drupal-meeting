@@ -6,9 +6,9 @@
 function meeting_theme($existing, $type, $theme, $path)
 {
   return array(
-    'meeting_template' => array(
-      'variables' => array('table' => NULL),
-      'template' => 'html--admin--meeting--edit',
+    'meeting_create_template' => array(
+      'variables' => array('meeting' => NULL),
+      'template' => 'html--admin--meeting--create',
       '#attached' => [
         'library' => [
           'meeting/global-styling',
@@ -44,8 +44,34 @@ function meeting_theme($existing, $type, $theme, $path)
         ],
       ]
     ),
+    'inputcolour_form' => array(
+      'template' => 'inputcolour-form',
+      'render element' => 'element'
+    ),
+    'thumb_upload' => array(
+      'template' => 'thumb-upload',
+      'render element' => 'element',
+    ),
   );
 }
+
+
+
+function meeting_preprocess_inputcolour_form(&$variables)
+{
+  $element = $variables['element'];
+
+  $variables['attributes'] = [];
+  if (isset($element['#id'])) {
+    $variables['attributes']['id'] = $element['#id'];
+  }
+  if (!empty($element['#attributes']['class'])) {
+    $variables['attributes']['class'] = (array) $element['#attributes']['class'];
+  }
+
+  $variables['content'] = $element;
+}
+
 
 function meeting_page_attachments(array &$attachments)
 {
@@ -72,12 +98,17 @@ function meeting_preprocess_breadcrumb(&$variables)
   }
 }
 
+function meeting_ckeditor_css_alter(&$css, $editor)
+{
+  $css[] = drupal_get_path('module', 'meeting') . '/css/components/text-content.css';
+}
+
 
 function meeting_editor_js_settings_alter(array &$settings)
 {
   foreach (array_keys($settings['editor']['formats']) as $text_format_id) {
     if ($settings['editor']['formats'][$text_format_id]['editor'] === 'ckeditor') {
-      $settings['editor']['formats'][$text_format_id]['editorSettings']['autoGrow_minHeight'] = '100';
+      $settings['editor']['formats'][$text_format_id]['editorSettings']['autoGrow_minHeight'] = '300';
     }
   }
 }
@@ -97,7 +128,7 @@ function meeting_schema()
       ),
       'meeting_name' => array(
         'type' => 'varchar',
-        'length' => 32,
+        'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
@@ -115,6 +146,36 @@ function meeting_schema()
       'fid' => array(
         'type' => 'int',
         'length' => 20,
+        'not null' => FALSE,
+      ),
+      'meeting_background_colour' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+      ),
+      'meeting_text_colour' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+      ),
+      'meeting_button_background_colour' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+      ),
+      'meeting_button_text_colour' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+      ),
+      'meeting_results_shadow_colour' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+      ),
+      'meeting_results_bar_colour' => array(
+        'type' => 'varchar',
+        'length' => 255,
         'not null' => FALSE,
       ),
       'meeting_status' => array(

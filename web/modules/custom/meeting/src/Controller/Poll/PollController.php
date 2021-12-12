@@ -11,6 +11,7 @@ use \Symfony\Component\HttpFoundation\Response;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Link;
 use Drupal\Core\Render\Markup;
+use Drupal\meeting\Plugin\Helper\Component;
 
 class PollController extends ControllerBase
 {
@@ -25,7 +26,7 @@ class PollController extends ControllerBase
       'allow'           => array('data' => 'Allow multiple choice', 'class' => ["col-1 text-center"]),
       'poll_control'    => array('data' => 'Poll control', 'class' => ["col-1 text-center"]),
       'results_control' => array('data' => 'Poll control', 'class' => ["col-1 text-center"]),
-      'participant'     => array('data' => 'Participant count', 'class' => ["col-1 text-center"]),
+      'participant'     => array('data' => 'Participant', 'class' => ["col-1 text-center"]),
     );
 
     // get data from database
@@ -44,9 +45,9 @@ class PollController extends ControllerBase
       $rows[] = array(
         'edit'            => Self::actionEdit($data),
         'poll_question'   => array('data' => $data->poll_question, 'class' => ["text-left"]),
-        'allow'           => Self::buttonControl($data, 'meeting.poll_allow', $data->poll_allow_multiple_choice),
-        'poll_control'    => Self::buttonControl($data, 'meeting.poll_poll_control', $data->poll_activate_poll),
-        'results_control' => Self::buttonControl($data, 'meeting.poll_result_controll', $data->poll_show_results),
+        'allow'           => Self::buttonControl($data, 'ck1', 'meeting.poll_allow', $data->poll_allow_multiple_choice),
+        'poll_control'    => Self::buttonControl($data, 'ck2', 'meeting.poll_poll_control', $data->poll_activate_poll),
+        'results_control' => Self::buttonControl($data, 'ck3', 'meeting.poll_result_controll', $data->poll_show_results),
         'participant'     => array('data' => '10', 'class' => ["col-1 text-center"]),
       );
     }
@@ -101,17 +102,12 @@ class PollController extends ControllerBase
     );
   }
 
-  public static function buttonControl($data, $url, $field)
+  public static function buttonControl($data, $ck, $url, $field)
   {
     $url_poll_control = Url::fromRoute($url);
-    $poll_choice = $field == 1 ? "Yes" : "No";
-    $poll_choice_class = $field == 1 ? "btn--success" : "btn--danger";
-    return  array(
-      'data' => new FormattableMarkup(
-        '<button class="btn poll-control-ajax btn-sm ' . $poll_choice_class . '" data-id="@id" data-url="' . $url_poll_control->toString() . '">@name</button>',
-        ['@name' => $poll_choice, '@id' => $data->id]
-      )
-    );
+    $poll_choice = $field == 1 ? "checked" : "";
+
+    return Component::checkbox("switch$data->id-$ck", 'poll-control-ajax', null, $poll_choice,  $data->id, $url_poll_control->toString());
   }
 
 

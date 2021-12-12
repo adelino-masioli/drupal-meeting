@@ -3,10 +3,9 @@ global-styling:
   header: true
   css:
     theme:
-      css/style.css: {}
-      css/poll.css: {}
-      css/tabs.css: {}
+      css/style.min.css: {}
       css/feather.css: {}
+      css/placeholder-loading.min.css: {}
 
 
 global-javascript:

@@ -1,7 +1,7 @@
 (function ($, Drupal) {
   "use strict";
   /**
-   * meeting functions
+   * poll functions
    */
   $(document).on("click", ".edit-poll-ajax", function (event) {
     var jsonString = JSON.parse($(this).attr("data-poll"));
@@ -11,6 +11,7 @@
     $("input[data-selector-id='poll-id']").val(jsonString.id);
     event.preventDefault();
   });
+
 
   $(document).on("click", ".remove-poll", function (event) {
     var tr = this;
@@ -49,7 +50,6 @@
       },
       error: function (result) {},
     });
-    event.preventDefault();
   });
 
   $(document).on("click", ".action-dropdown", function (event) {
@@ -68,4 +68,6 @@
 
     event.preventDefault();
   });
+
+
 })(jQuery, Drupal);

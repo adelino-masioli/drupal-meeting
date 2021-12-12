@@ -11,6 +11,7 @@ use Drupal\file\Entity\File;
 use Drupal\meeting\Controller\Poll\PollController;
 use Drupal\meeting\Ajax\LoadPartialCommand;
 use Drupal\Core\Url;
+use Drupal\meeting\Plugin\Helper\Component;
 
 class MeetingPollForm extends FormBase
 {
@@ -50,10 +51,17 @@ class MeetingPollForm extends FormBase
       '#attributes' => ['class' => 'row']
     ];
 
+
     $form['fields']['box'] = [
       '#type'  => 'container',
       '#attributes' => ['class' => 'col-xs-12 col-sm-12 col-md-12col-lg-12']
     ];
+
+    $form['fields']['box']['ck'] = [
+      '#type' => 'markup',
+      '#markup' => Component::checkbox('activate_poll_', 'module-activate-ajax', 'btn-activate-module', null, null, null)
+    ];
+
 
     $form['fields']['box']['row'] = [
       '#type'  => 'container',
@@ -62,16 +70,13 @@ class MeetingPollForm extends FormBase
 
     $form['fields']['box']['row']['message'] = [
       '#type' => 'markup',
-      '#markup' => '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 result-message"></div>'
+      '#markup' => '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 result-poll-message"></div>'
     ];
 
     $form['fields']['box']['row']['id'] = [
       '#type' => 'hidden',
       '#attributes' => ['data-selector-id' => 'poll-id']
     ];
-
-
-
 
     $form['fields']['box']['row']['poll_question'] = [
       '#type' => 'textfield',
@@ -84,22 +89,57 @@ class MeetingPollForm extends FormBase
       '#attributes' => ['placeholder' => 'Type your question here', 'class' => ['col-full']],
     ];
 
-    $form['actions']['submit'] = [
+    $form['actions'] = [
       '#type' => 'submit',
       '#value' => $this->t('Save'),
+      '#attributes' => ['class' => ['action_ajax']],
       '#ajax' => [
         'callback' => '::promptCallback',
-      ],
+      ]
     ];
 
-  //  $form['fields']['box']['row']['display_data'] = [
-  //     '#type' => 'container',
-  //     '#open'  => true,
-  //     '#attributes' => ['id' => 'display_poll']
-  //   ];
-    // $form['fields']['box']['row']['display_data']['poll'] = PollController::get($id);
-
     return $form;
+  }
+
+
+
+  /**
+   * Undocumented function
+   *
+   * @param array $form
+   * @param FormStateInterface $form_state
+   * @return void
+   */
+  public function promptCallback(array &$form, FormStateInterface $form_state)
+  {
+    if ($form_state->hasAnyErrors()) {
+      $renderer = \Drupal::service('renderer');
+      $status_messages = ['#type' => 'status_messages'];
+
+      $response = new AjaxResponse();
+      $response->addCommand(
+        new HtmlCommand(
+          '.result-poll-message',
+          $renderer->renderRoot($status_messages)
+        ),
+      );
+    }else{
+      $response = new AjaxResponse();
+
+      \Drupal::messenger()->addMessage($this->t('Successfully saved'), 'status', TRUE);
+      $messages = ['#type' => 'status_messages'];
+
+      $response->addCommand(
+        new HtmlCommand(
+          '.result-poll-message',
+          $messages
+        ),
+      );
+      $url = Url::fromRoute('meeting.poll_display_data', ['id' => $form_state->getValue('meeting_id'), 'ajax' =>true]);
+      $response->addCommand(new LoadPartialCommand('.poll-form', '#display_poll', $url->toString()));
+    }
+
+    return $response;
   }
 
 
@@ -129,14 +169,13 @@ class MeetingPollForm extends FormBase
       $file->save();
     }
 
-    if($form_state->getValue('id')){
+    if ($form_state->getValue('id')) {
       $query = \Drupal::database();
       $query->update('poll')
-        ->fields($data)
+      ->fields($data)
         ->condition('id', $form_state->getValue('id'))
         ->execute();
-
-    }else{
+    } else {
       //create new meeting and get last id
       \Drupal::database()->insert('poll')->fields($data)->execute();
     }
@@ -145,44 +184,6 @@ class MeetingPollForm extends FormBase
     $form_state->setRebuild();
   }
 
-  /**
-   * Undocumented function
-   *
-   * @param array $form
-   * @param FormStateInterface $form_state
-   * @return void
-   */
-  public function promptCallback(array &$form, FormStateInterface $form_state)
-  {
-    if ($form_state->hasAnyErrors()) {
-      $renderer = \Drupal::service('renderer');
-      $status_messages = ['#type' => 'status_messages'];
-
-      $response = new AjaxResponse();
-      $response->addCommand(
-        new HtmlCommand(
-          '.result-message',
-          $renderer->renderRoot($status_messages)
-        ),
-      );
-    }else{
-      $response = new AjaxResponse();
-
-      \Drupal::messenger()->addMessage($this->t('Successfully saved'), 'status', TRUE);
-      $messages = ['#type' => 'status_messages'];
-
-      $response->addCommand(
-        new HtmlCommand(
-          '.result-message',
-          $messages
-        ),
-      );
-      $url = Url::fromRoute('meeting.poll_display_data', ['id' => $form_state->getValue('meeting_id'), 'ajax' =>true]);
-      $response->addCommand(new LoadPartialCommand('.poll-form', '#display_poll', $url->toString()));
-    }
-
-    return $response;
-  }
 
   /**
    * Undocumented function

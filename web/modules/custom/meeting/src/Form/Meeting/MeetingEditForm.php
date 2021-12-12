@@ -6,6 +6,7 @@ use Drupal\Core\Database\Database;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\file\Entity\File;
 use Drupal\meeting\Form\Meeting\Partials\MeetingForm;
 
 class MeetingEditForm extends FormBase
@@ -42,11 +43,29 @@ class MeetingEditForm extends FormBase
 
   public function submitForm(array &$form, FormStateInterface $form_state)
   {
+    //get picture id
+    $picture = $form_state->getValue('meeting_results_background');
+
     $data = array(
-      'meeting_name'        =>  $form_state->getValue('meeting_name'),
-      'meeting_url_video'   =>  $form_state->getValue('meeting_url_video'),
-      'meeting_status'      =>  $form_state->getValue('meeting_status'),
+      'meeting_name'                      =>  $form_state->getValue('meeting_name'),
+      'meeting_description'               =>  $form_state->getValue('meeting_description')['value'],
+      'meeting_url_video'                 =>  $form_state->getValue('meeting_url_video'),
+      'fid'                               =>  isset($picture[0]) ? $picture[0] : NULL,
+      'meeting_background_colour'         =>  $form_state->getValue('meeting_background_colour'),
+      'meeting_text_colour'               =>  $form_state->getValue('meeting_text_colour'),
+      'meeting_button_background_colour'  =>  $form_state->getValue('meeting_button_background_colour'),
+      'meeting_button_text_colour'        =>  $form_state->getValue('meeting_button_text_colour'),
+      'meeting_results_shadow_colour'     =>  $form_state->getValue('meeting_results_shadow_colour'),
+      'meeting_results_bar_colour'        =>  $form_state->getValue('meeting_results_bar_colour'),
+      'meeting_status'                    =>  $form_state->getValue('meeting_status'),
     );
+
+    // save file as Permanent
+    if (isset($picture[0])) {
+      $file = File::load($picture[0]);
+      $file->setPermanent();
+      $file->save();
+    }
 
     \Drupal::database()->update('meeting')->fields($data)->condition('id', $form_state->getValue('id'))->execute();
 
@@ -58,6 +77,7 @@ class MeetingEditForm extends FormBase
 
     return;
   }
+
 
   /**
    * Undocumented function
