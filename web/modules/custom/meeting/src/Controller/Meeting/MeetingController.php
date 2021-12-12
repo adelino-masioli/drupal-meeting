@@ -3,38 +3,47 @@
 namespace Drupal\meeting\Controller\Meeting;
 
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Link;
 use Drupal\Core\Url;
 
 
 class MeetingController extends ControllerBase
 {
-
   public function index()
   {
-    $form['form'] = $this->formBuilder()->getForm('Drupal\meeting\Form\Meeting\MeetingfilterForm');
+    $header = $this->tableHeader();
+    $rows   = $this->tableRows($header);
 
+    $form['form'] = $this->formBuilder()->getForm('Drupal\meeting\Form\Meeting\MeetingfilterForm');
+    // render table
+    $form['table'] = [
+      '#type'   => 'table',
+      '#header' => $header,
+      '#rows'   => $rows,
+      '#empty'  => $this->t('No data found'),
+    ];
+    return $form;
+  }
+
+  public function tableHeader()
+  {
     //create table header
     $header = array(
       array(
         'data'  => $this->t('Meeting name'),
         'field' => 'm.meeting_name',
-        'class' => ['col-9 text-center'],
+        'class' => ['col-11 text-center'],
       ),
       array(
-        'data'  => $this->t('View'),
-        'class' => ['col-1 text-center'],
-      ),
-      array(
-        'data'  => $this->t('Edit'),
-        'class' => ['col-1 text-center'],
-      ),
-      array(
-        'data'  => $this->t('Delete'),
+        'data'  => $this->t('Operations'),
         'class' => ['col-1 text-center'],
       ),
     );
 
+    return $header;
+  }
+
+  public function tableRows($header)
+  {
     // get data from database
     $query = \Drupal::database()->select('meeting', 'm');
     $query->fields('m');
@@ -50,29 +59,36 @@ class MeetingController extends ControllerBase
 
     $rows = array();
     foreach ($results as $data) {
-      $url_delete = Url::fromRoute('meeting.delete_form', ['id' => $data->id], ['attributes' => ['class' => ['button']]]);
-      $url_edit   = Url::fromRoute('meeting.edit_form', ['id' => $data->id], ['attributes' => ['class' => ['button']]]);
-      $url_view   = Url::fromRoute('meeting.show_data', ['id' => $data->id], ['attributes' => ['class' => ['button']]]);
-      $linkEdit   = Link::fromTextAndUrl('Edit', $url_edit);
-      $linkView   = Link::fromTextAndUrl('View', $url_view);
-      $linkDelete = Link::fromTextAndUrl('Delete', $url_delete);
+      $row = [];
+      $row['title']['data'] = [
+        '#type' => 'inline_template',
+        '#template' => '<div class="block-filter-text-source">{{ label }}</div>',
+        '#context' => [
+          'label' => $data->meeting_name,
+        ],
+      ];
 
-      //get data
-      $rows[] = array(
-        ['data'      => $data->meeting_name, 'class' => ['text-left']],
-        ['data'      => $linkView, 'class' => ['text-center']],
-        ['data'      => $linkEdit, 'class' => ['text-center']],
-        ['data'      => $linkDelete, 'class' => ['text-center']],
-      );
+      $links['edit'] = [
+        'title' => $this->t('Edit'),
+        'url' => Url::fromRoute('meeting.edit_form', ['id' => $data->id]),
+      ];
+
+      $links['delete'] = [
+        'title' => $this->t('Delete'),
+        'url' => Url::fromRoute('meeting.delete_form', ['id' => $data->id]),
+      ];
+
+      $row[] = [
+        'data' => [
+          '#prefix' => '<div class="d-flex justify-content-center">',
+          '#type' => 'operations',
+          '#links' => $links,
+          '#suffix' => '</div>',
+        ],
+      ];
+
+      $rows[] = $row;
     }
-
-    // render table
-    $form['table'] = [
-      '#type'   => 'table',
-      '#header' => $header,
-      '#rows'   => $rows,
-      '#empty'  => $this->t('No data found'),
-    ];
-    return $form;
+    return $rows;
   }
 }
