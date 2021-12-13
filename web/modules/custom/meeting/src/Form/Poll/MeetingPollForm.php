@@ -35,8 +35,8 @@ class MeetingPollForm extends FormBase
   {
     $data     =  $this->getCurrentMeeting('meeting', 'm', $id);
     $checked  =  $this->isActivated($id);
-    $data_id  =  $data['id'];
-    $data_url =  Url::fromRoute('meeting.poll_activate')->toString();
+    $data_id  =  $data['id'].'|poll|1';
+    $data_url =  Url::fromRoute('meeting.activate_module')->toString();
 
     $form_state->setCached(FALSE);
 

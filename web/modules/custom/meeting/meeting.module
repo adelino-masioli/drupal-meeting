@@ -98,6 +98,7 @@ function meeting_preprocess_breadcrumb(&$variables)
   }
 }
 
+
 function meeting_ckeditor_css_alter(&$css, $editor)
 {
   $css[] = drupal_get_path('module', 'meeting') . '/css/components/text-content.css';

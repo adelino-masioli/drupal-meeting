@@ -1,7 +1,10 @@
 (function ($, Drupal) {
   "use strict";
+
   /**
-   * meeting functions
+   *
+   * Update Question
+   *
    */
 
   $(document).on("click", ".update-question-ajax", function (event) {
@@ -29,6 +32,14 @@
     });
     event.preventDefault();
   });
+
+
+  /**
+   *
+   * Delete Question
+   *
+   */
+
 
   $(document).on("click", ".delete-question-ajax", function (event) {
     var tr = this;

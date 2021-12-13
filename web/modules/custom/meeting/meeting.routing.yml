@@ -38,6 +38,14 @@ meeting.delete_form:
   requirements:
     _access: 'TRUE'
 
+meeting.activate_module:
+  path: "/admin/meeting/module/activate"
+  defaults:
+    _title: "Activate module"
+    _controller: '\Drupal\meeting\Controller\Meeting\MeetingActivateModuleController::activate'
+  requirements:
+     _access: 'TRUE'
+
 meeting_modal.modal:
   path: 'admin/meeting/modal'
   defaults:
@@ -83,14 +91,6 @@ meeting.poll_allow:
   defaults:
     _title: "Polls"
     _controller: '\Drupal\meeting\Controller\Poll\PollAllowController::update'
-  requirements:
-     _access: 'TRUE'
-
-meeting.poll_activate:
-  path: "/admin/meeting/poll/activate"
-  defaults:
-    _title: "Polls"
-    _controller: '\Drupal\meeting\Controller\Poll\PollAlctivateController::activate'
   requirements:
      _access: 'TRUE'
 

@@ -18,24 +18,6 @@
 
   /**
    *
-   * Activate Meeting Poll
-   *
-   */
-  $(document).on("click", ".module-activate-ajax", function (event) {
-    $.ajax({
-      url: $(this).attr("data-url"),
-      type: "post",
-      data: { meeting_id: $(this).attr("data-id") },
-      dataType: "JSON",
-      success: function (result) {
-        console.log("Module Poll activated!");
-      },
-      error: function (result) {},
-    });
-  });
-
-  /**
-   *
    * Delete a Poll
    *
    */

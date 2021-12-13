@@ -8,6 +8,8 @@ var importer = require("node-sass-globbing");
 var plumber = require("gulp-plumber");
 var cssmin = require("gulp-cssmin");
 var browserSync = require("browser-sync").create();
+var concat = require("gulp-concat");
+var minify = require("gulp-minify");
 
 var cleanCss = require("gulp-clean-css");
 var rename = require("gulp-rename");
@@ -39,6 +41,15 @@ gulp.task("sass", function (done) {
     )
     .pipe(rename({ extname: ".min.css" }))
     .pipe(gulp.dest("./css/"))
+    .on("end", done);
+});
+
+gulp.task("js", function (done) {
+  return gulp
+    .src(["./src/js/*.js"])
+    .pipe(concat("js.js"))
+    .pipe(minify())
+    .pipe(gulp.dest("./js/"))
     .on("end", done);
 });
 
