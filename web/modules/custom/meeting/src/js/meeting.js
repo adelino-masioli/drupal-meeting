@@ -1,5 +1,5 @@
 (function ($, Drupal) {
-  "use strict";
+  ("use strict");
   /**
    * meeting functions
    */
@@ -25,6 +25,29 @@
       }
     },
   };
+
+  /**
+   *
+   * Activate Meeting Module
+   *
+   */
+  $(document).on("click", ".module-activate-ajax", function (event) {
+    var module_id = $(this).attr("data-id").split("|");
+    $.ajax({
+      url: $(this).attr("data-url"),
+      type: "post",
+      data: {
+        meeting_id: module_id[0],
+        module: module_id[1],
+        order: module_id[2],
+      },
+      dataType: "JSON",
+      success: function (result) {
+
+      },
+      error: function (result) {},
+    });
+  });
 
   //stop propagation form
   $(document).ready(function () {

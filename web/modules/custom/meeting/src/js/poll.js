@@ -1,8 +1,12 @@
 (function ($, Drupal) {
-  "use strict";
+  ("use strict");
+
   /**
-   * poll functions
+   *
+   * Select Poll to update
+   *
    */
+
   $(document).on("click", ".edit-poll-ajax", function (event) {
     var jsonString = JSON.parse($(this).attr("data-poll"));
     $("input[data-drupal-selector='edit-poll-question']").val(
@@ -12,6 +16,11 @@
     event.preventDefault();
   });
 
+  /**
+   *
+   * Delete a Poll
+   *
+   */
 
   $(document).on("click", ".remove-poll", function (event) {
     var tr = this;
@@ -22,13 +31,20 @@
       dataType: "text",
       success: function (result) {
         document.getElementById("poll-form").reset();
-        $("input[data-selector-id='poll-id']").val('');
+        $("input[data-selector-id='poll-id']").val("");
         $(tr).closest("tr").remove();
       },
       error: function (result) {},
     });
     event.preventDefault();
   });
+
+  /**
+   *
+   * Allow multiple choice
+   * Activate o page
+   * Show results
+   */
 
   $(document).on("click", ".poll-control-ajax", function (event) {
     var btn = this;
@@ -52,6 +68,14 @@
     });
   });
 
+
+  /**
+   *
+   * Dropdown
+   *
+   */
+
+
   $(document).on("click", ".action-dropdown", function (event) {
     $(".dropdown-active").find(".action-item-dropdown").stop().slideUp(400);
     $(".action-dropdown").removeClass("dropdown-active");
@@ -68,6 +92,4 @@
 
     event.preventDefault();
   });
-
-
 })(jQuery, Drupal);

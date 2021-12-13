@@ -38,9 +38,6 @@ class PollController extends ControllerBase
 
     $rows = array();
     foreach ($results as $data) {
-
-
-
       //get data
       $rows[] = array(
         'edit'            => Self::actionEdit($data),
@@ -109,7 +106,6 @@ class PollController extends ControllerBase
 
     return Component::checkbox("switch$data->id-$ck", 'poll-control-ajax', null, $poll_choice,  $data->id, $url_poll_control->toString());
   }
-
 
   public function delete($id)
   {

@@ -8,7 +8,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\file\Entity\File;
-use Drupal\meeting\Controller\Poll\PollController;
 use Drupal\meeting\Ajax\LoadPartialCommand;
 use Drupal\Core\Url;
 use Drupal\meeting\Plugin\Helper\Component;
@@ -34,7 +33,10 @@ class MeetingPollForm extends FormBase
    */
   public function buildForm(array $form, FormStateInterface $form_state, $id=NULL)
   {
-    $data =  $this->getCurrentMeeting('meeting', 'm', $id);
+    $data     =  $this->getCurrentMeeting('meeting', 'm', $id);
+    $checked  =  $this->isActivated($id);
+    $data_id  =  $data['id'].'|poll|1';
+    $data_url =  Url::fromRoute('meeting.activate_module')->toString();
 
     $form_state->setCached(FALSE);
 
@@ -59,7 +61,7 @@ class MeetingPollForm extends FormBase
 
     $form['fields']['box']['ck'] = [
       '#type' => 'markup',
-      '#markup' => Component::checkbox('activate_poll_', 'module-activate-ajax', 'btn-activate-module', null, null, null)
+      '#markup' => Component::checkbox('activate_poll_', 'module-activate-ajax', 'btn-activate-module', $checked, $data_id, $data_url)
     ];
 
 
@@ -205,5 +207,29 @@ class MeetingPollForm extends FormBase
     }
 
     return $data;
+  }
+
+  /**
+   * Undocumented function
+   *
+   * @param [type] $id
+   * @return boolean
+   */
+  public function isActivated($id)
+  {
+    $conn = Database::getConnection();
+    $data = array();
+    if (isset($id)) {
+      $query = $conn->select("meeting_module", "m")
+        ->condition('meeting_id', $id)
+        ->condition('module', "poll")
+        ->fields("m");
+      $data = $query->execute()->fetchAssoc();
+    }
+    if($data){
+      return "checked";
+    }
+
+    return null;
   }
 }

@@ -7,9 +7,6 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
-use Drupal\file\Entity\File;
-use Drupal\meeting\Controller\Poll\PollController;
-use Drupal\meeting\Ajax\LoadPartialCommand;
 use Drupal\Core\Url;
 use Drupal\meeting\Plugin\Helper\Component;
 
@@ -35,6 +32,10 @@ class MeetingQuestionForm extends FormBase
   public function buildForm(array $form, FormStateInterface $form_state, $id=NULL)
   {
     $meeting =  $this->getCurrentData('meeting', 'm', 'id', $id);
+    $checked  =  $this->isActivated($id);
+    $data_id  =  $meeting['id'] . '|question|2';
+    $data_url =  Url::fromRoute('meeting.activate_module')->toString();
+
     $question =  $this->getCurrentData('question', 'q', 'meeting_id', $meeting['id']);
 
     $form_state->setCached(FALSE);
@@ -55,7 +56,7 @@ class MeetingQuestionForm extends FormBase
 
     $form['fields']['box']['ck'] = [
       '#type' => 'markup',
-      '#markup' => Component::checkbox('activate_question_', 'module-activate-ajax', 'btn-activate-module', null, null, null)
+      '#markup' => Component::checkbox('activate_question_', 'module-activate-ajax', 'btn-activate-module', $checked, $data_id, $data_url)
     ];
 
 
@@ -93,6 +94,7 @@ class MeetingQuestionForm extends FormBase
 
     $form['fields']['box']['row']['description'] = [
       '#type' => 'text_format',
+      '#format' =>  'meeting_html_editor',
       '#title' => 'Question description',
       '#default_value' => (isset($question['description'])) ? $question['description'] : '',
       '#wrapper_attributes' => ['class' => 'col-xs-12 col-sm-12 col-md-12 col-lg-12'],
@@ -204,5 +206,29 @@ class MeetingQuestionForm extends FormBase
     }
 
     return $data;
+  }
+
+  /**
+   * Undocumented function
+   *
+   * @param [type] $id
+   * @return boolean
+   */
+  public function isActivated($id)
+  {
+    $conn = Database::getConnection();
+    $data = array();
+    if (isset($id)) {
+      $query = $conn->select("meeting_module", "m")
+        ->condition('meeting_id', $id)
+        ->condition('module', "question")
+        ->fields("m");
+      $data = $query->execute()->fetchAssoc();
+    }
+    if ($data) {
+      return "checked";
+    }
+
+    return null;
   }
 }

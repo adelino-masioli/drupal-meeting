@@ -12,10 +12,7 @@ global-javascript:
   version: 1.x
   header: true
   js:
-    js/meeting.js: {}
-    js/poll.js: {}
-    js/answer.js: {}
-    js/question.js: {}
+    js/js-min.js: {}
   dependencies:
     - core/jquery
     - core/drupal

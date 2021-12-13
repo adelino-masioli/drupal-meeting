@@ -38,6 +38,14 @@ meeting.delete_form:
   requirements:
     _access: 'TRUE'
 
+meeting.activate_module:
+  path: "/admin/meeting/module/activate"
+  defaults:
+    _title: "Activate module"
+    _controller: '\Drupal\meeting\Controller\Meeting\MeetingActivateModuleController::activate'
+  requirements:
+     _access: 'TRUE'
+
 meeting_modal.modal:
   path: 'admin/meeting/modal'
   defaults:

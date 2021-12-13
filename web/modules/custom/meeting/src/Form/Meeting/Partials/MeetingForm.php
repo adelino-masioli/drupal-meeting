@@ -63,6 +63,7 @@ class MeetingForm
 
     $form['fields']['box']['row']['meeting_description'] = [
       '#type' => 'text_format',
+      '#format' =>  'meeting_html_editor',
       '#title' => 'Meeting description',
       '#default_value' => (isset($data['meeting_description'])) ? $data['meeting_description'] : '',
       '#wrapper_attributes' => ['class' => 'col-xs-12 col-sm-12 col-md-12 col-lg-12'],

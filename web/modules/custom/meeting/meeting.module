@@ -98,6 +98,7 @@ function meeting_preprocess_breadcrumb(&$variables)
   }
 }
 
+
 function meeting_ckeditor_css_alter(&$css, $editor)
 {
   $css[] = drupal_get_path('module', 'meeting') . '/css/components/text-content.css';
@@ -414,6 +415,36 @@ function meeting_schema()
     ),
   );
 
+  $schema['meeting_module'] = array(
+    'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'meeting_id' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'module' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'order' => array(
+        'type' => 'int',
+        'length' => 20,
+        'not null' => FALSE,
+      )
+    ),
+    'primary key' => array(
+      'id',
+    ),
+  );
+
 
   return $schema;
 }
@@ -422,6 +453,30 @@ function meeting_schema()
 function meeting_install()
 {
   $database = \Drupal::database();
+  $database->schema()->changeField(
+    'meeting_module',
+    'meeting_id',
+    'meeting_id',
+    array(
+      'type' => 'int',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+      'default' => 0,
+    ),
+    array(
+      'foreign keys' => array(
+        'meeting_id' => array(
+          'table' => 'meeting',
+          'columns' => array(
+            'id' => 'id',
+          ),
+          'on update' => 'cascade',
+          'on delete' => 'set null',
+        )
+      ),
+    )
+  );
+
   $database->schema()->changeField(
     'poll',
     'meeting_id',
