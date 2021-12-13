@@ -86,6 +86,14 @@ meeting.poll_allow:
   requirements:
      _access: 'TRUE'
 
+meeting.poll_activate:
+  path: "/admin/meeting/poll/activate"
+  defaults:
+    _title: "Polls"
+    _controller: '\Drupal\meeting\Controller\Poll\PollAlctivateController::activate'
+  requirements:
+     _access: 'TRUE'
+
 meeting.poll_poll_control:
   path: "/admin/meeting/poll/display"
   defaults:
