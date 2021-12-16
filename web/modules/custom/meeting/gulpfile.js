@@ -24,7 +24,7 @@ var sass_config = {
 };
 
 var paths = {
-  sass: ["./src/scss/**/*.scss"],
+  modify: ["./src/scss/**/*.scss", "./src/js/*.js"]
 };
 
 
@@ -54,11 +54,7 @@ gulp.task("js", function (done) {
 });
 
 gulp.task("watch", function () {
-  // browserSync.init({
-  //   //injectChanges: true,
-  //   proxy: "myanywhere.test",
-  // });
-   gulp.watch(paths.sass, gulp.series("sass"));
+   gulp.watch(paths.modify, gulp.series("sass", "js"));
 });
 
 

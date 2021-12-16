@@ -55,8 +55,20 @@
           div.style.display = "none";
         };
       }
-    },
+      ///component color
+      $(".component-color", context)
+        .once("click-color")
+        .click(function () {
+          $(this).find("input", context).once("click-color").click();
+          $(context)
+            .find(".component-color", context)
+            .find("input")
+            .removeOnce("click-color");
+        });
+    }
   };
+
+
 
   /**
    *
