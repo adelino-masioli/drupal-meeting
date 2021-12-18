@@ -87,6 +87,18 @@
 
   Drupal.AjaxCommands.prototype.RemoveTr = function (ajax, response, status) {};
 
+  Drupal.AjaxCommands.prototype.resetFormCommand = function (
+    ajax,
+    response,
+    status
+  ) {
+      // $("input[data-drupal-selector='edit-answer']").val("");
+      // $("input[data-selector-id='poll-answer-id']").val("");
+      $(response.form).each(function () {
+         $(this).find("[data-reset]").val("");
+      });
+  };
+
   /**
    * load partial table
    * @param {*} ajax
@@ -108,8 +120,10 @@
       success: function (response) {
         $(renderDiv).html(response);
 
-        Drupal.settings = response[0].settings;
-        Drupal.attachBehaviors($(renderDiv)[0], Drupal.settings);
+        if (response.clear){
+          Drupal.settings = response[0].settings;
+          Drupal.attachBehaviors($(renderDiv)[0], Drupal.settings);
+        }
       },
     });
 

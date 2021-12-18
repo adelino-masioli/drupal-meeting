@@ -1465,3 +1465,14 @@ a.btn--danger:active {
 #display_poll table tbody tr .text-left {
   text-align: center;
 }
+
+.result-answer-message .messages-list {
+  margin-top: 0;
+}
+.result-answer-message .messages-list .messages {
+  margin-top: 10px;
+  padding: 1rem 1rem 1rem 1.1875rem;
+}
+.result-answer-message .messages-list .messages .messages__header {
+  margin-bottom: 0px;
+}

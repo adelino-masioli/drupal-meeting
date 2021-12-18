@@ -8,6 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\meeting\Ajax\LoadPartialCommand;
+use Drupal\meeting\Ajax\ResetFormCommand;
 use Drupal\Core\Url;
 
 class MeetingPollAnswerForm extends FormBase
@@ -71,7 +72,7 @@ class MeetingPollAnswerForm extends FormBase
 
     $form['fields']['box']['row']['id'] = [
       '#type' => 'hidden',
-      '#attributes' => ['data-selector-id' => 'poll-answer-id']
+      '#attributes' => ['data-selector-id' => 'poll-answer-id', 'data-reset' => true]
     ];
 
     $form['fields']['box']['row']['answer'] = [
@@ -82,20 +83,87 @@ class MeetingPollAnswerForm extends FormBase
       '#default_value' => '',
       '#maxlength' => 128,
       '#wrapper_attributes' => ['class' => 'col-xs-12 col-sm-12 col-md-12 col-lg-12'],
-      '#attributes' => ['placeholder' => 'Type a answer here', 'class' => ['col-full']],
+      '#attributes' => ['placeholder' => 'Type a answer here', 'class' => ['col-full'], 'data-reset' => true],
     ];
 
-    $form['actions']['submit'] = [
+    $form['actions'] = [
       '#type' => 'submit',
       '#value' => $this->t('Save'),
+      '#attributes' => ['class' => ['button--primary action_ajax']],
       '#ajax' => [
         'callback' => '::promptCallback',
       ],
     ];
 
+    $form['reset'] = [
+      '#type' => 'button',
+      '#value' => $this->t('New answer'),
+      '#ajax' => [
+        'callback' => '::resetForm',
+      ],
+      '#attributes' => ['class' => ['answer-reset-ajax action_ajax']],
+    ];
+
     return $form;
   }
 
+  public function resetForm(array &$form, FormStateInterface $form_state)
+  {
+    $response = new AjaxResponse();
+    $response->addCommand(new ResetFormCommand('.poll-answer-form'));
+    $form_state->setRebuild();
+    return $response;
+  }
+
+
+  /**
+   * Undocumented function
+   *
+   * @param array $form
+   * @param FormStateInterface $form_state
+   * @return void
+   */
+  public function promptCallback(array &$form, FormStateInterface $form_state)
+  {
+    $response = new AjaxResponse();
+    if ($form_state->hasAnyErrors()) {
+      $this->message($response, false);
+    }
+    else {
+      $this->message($response, true);
+      $url = Url::fromRoute('meeting.poll_answer_display_data', ['id' => $form_state->getValue('poll_id'), 'ajax' =>true]);
+      $response->addCommand(new LoadPartialCommand('.poll-answer-form', '#display_poll_answer', $url->toString()));
+    }
+
+    return $response;
+  }
+
+  /**
+   * message
+   *
+   * @param  mixed $response
+   * @return void
+   */
+  public function message($response, $type)
+  {
+      if($type == false){
+         $renderer = \Drupal::service('renderer');
+         $msg = ['#type' => 'status_messages'];
+         $status_messages = $renderer->renderRoot($msg);
+      }else {
+         \Drupal::messenger()->addMessage($this->t('Successfully saved'), 'status', TRUE);
+          $status_messages = ['#type' => 'status_messages'];
+      }
+
+      $response->addCommand(
+        new HtmlCommand(
+          '.result-answer-message',
+          $status_messages
+        ),
+      );
+
+      return $response;
+  }
 
   /**
    * Undocumented function
@@ -130,44 +198,6 @@ class MeetingPollAnswerForm extends FormBase
     $form_state->setRebuild();
   }
 
-  /**
-   * Undocumented function
-   *
-   * @param array $form
-   * @param FormStateInterface $form_state
-   * @return void
-   */
-  public function promptCallback(array &$form, FormStateInterface $form_state)
-  {
-    if ($form_state->hasAnyErrors()) {
-      $renderer = \Drupal::service('renderer');
-      $status_messages = ['#type' => 'status_messages'];
-
-      $response = new AjaxResponse();
-      $response->addCommand(
-        new HtmlCommand(
-          '.result-answer-message',
-          $renderer->renderRoot($status_messages)
-        ),
-      );
-    }else{
-      $response = new AjaxResponse();
-
-      \Drupal::messenger()->addMessage($this->t('Successfully saved'), 'status', TRUE);
-      $messages = ['#type' => 'status_messages'];
-
-      $response->addCommand(
-        new HtmlCommand(
-          '.result-answer-message',
-          $messages
-        ),
-      );
-      $url = Url::fromRoute('meeting.poll_answer_display_data', ['id' => $form_state->getValue('poll_id'), 'ajax' =>true]);
-      $response->addCommand(new LoadPartialCommand('.poll-answer-form', '#display_poll_answer', $url->toString()));
-    }
-
-    return $response;
-  }
 
   /**
    * Undocumented function

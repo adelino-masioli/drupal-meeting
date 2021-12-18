@@ -16,6 +16,16 @@
     event.preventDefault();
   });
 
+  $(document).on("click", ".ui-widget-overlay.ui-front", function () {
+    $(".ui-widget-overlay.ui-front").fadeOut(600, function () {
+      $(this).remove();
+    });
+
+    $(".custom-class-modal").fadeOut(600, function () {
+      $(this).remove();
+    });
+  });
+
   /**
    *
    * Delete a Poll

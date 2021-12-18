@@ -10,6 +10,7 @@
     event.preventDefault();
   });
 
+
   $(document).on("click", ".remove-answer-ajax", function (event) {
     var tr = this;
     var jsonString = JSON.parse($(this).attr("data-answer"));
@@ -27,5 +28,6 @@
     });
     event.preventDefault();
   });
+
 
 })(jQuery, Drupal);

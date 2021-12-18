@@ -74,9 +74,9 @@ class PollController extends ControllerBase
       'attributes' => [
         'class' => ['use-ajax'],
         'data-dialog-type' => 'modal',
-        'data-dialog-options' => Json::encode(['width' => '980'])
+        'data-dialog-renderer="off_canvas',
+        'data-dialog-options' => Json::encode(['width' => '980', 'height'=>'auto', 'dialogClass'=>'ustom-class-modal', 'show'=>'fadeIn', 'hide' =>'fadeOut'])
       ],
-
     ]);
 
     return  array(

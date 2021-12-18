@@ -114,11 +114,11 @@ class MeetingPollForm extends FormBase
    */
   public function promptCallback(array &$form, FormStateInterface $form_state)
   {
+    $response = new AjaxResponse();
     if ($form_state->hasAnyErrors()) {
       $renderer = \Drupal::service('renderer');
       $status_messages = ['#type' => 'status_messages'];
 
-      $response = new AjaxResponse();
       $response->addCommand(
         new HtmlCommand(
           '.result-poll-message',
@@ -126,8 +126,6 @@ class MeetingPollForm extends FormBase
         ),
       );
     }else{
-      $response = new AjaxResponse();
-
       \Drupal::messenger()->addMessage($this->t('Successfully saved'), 'status', TRUE);
       $messages = ['#type' => 'status_messages'];
 

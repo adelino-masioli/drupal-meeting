@@ -10,6 +10,7 @@
     event.preventDefault();
   });
 
+
   $(document).on("click", ".remove-answer-ajax", function (event) {
     var tr = this;
     var jsonString = JSON.parse($(this).attr("data-answer"));
@@ -27,6 +28,7 @@
     });
     event.preventDefault();
   });
+
 
 })(jQuery, Drupal);
 
@@ -119,6 +121,18 @@
 
   Drupal.AjaxCommands.prototype.RemoveTr = function (ajax, response, status) {};
 
+  Drupal.AjaxCommands.prototype.resetFormCommand = function (
+    ajax,
+    response,
+    status
+  ) {
+      // $("input[data-drupal-selector='edit-answer']").val("");
+      // $("input[data-selector-id='poll-answer-id']").val("");
+      $(response.form).each(function () {
+         $(this).find("[data-reset]").val("");
+      });
+  };
+
   /**
    * load partial table
    * @param {*} ajax
@@ -140,8 +154,10 @@
       success: function (response) {
         $(renderDiv).html(response);
 
-        Drupal.settings = response[0].settings;
-        Drupal.attachBehaviors($(renderDiv)[0], Drupal.settings);
+        if (response.clear){
+          Drupal.settings = response[0].settings;
+          Drupal.attachBehaviors($(renderDiv)[0], Drupal.settings);
+        }
       },
     });
 
@@ -167,6 +183,16 @@
     );
     $("input[data-selector-id='poll-id']").val(jsonString.id);
     event.preventDefault();
+  });
+
+  $(document).on("click", ".ui-widget-overlay.ui-front", function () {
+    $(".ui-widget-overlay.ui-front").fadeOut(600, function () {
+      $(this).remove();
+    });
+
+    $(".custom-class-modal").fadeOut(600, function () {
+      $(this).remove();
+    });
   });
 
   /**
