@@ -96,16 +96,25 @@
 
 
   $(document).on("click", ".action-dropdown", function (event) {
-    $(".dropdown-active").find(".action-item-dropdown").stop().slideUp(400);
-    $(".action-dropdown").removeClass("dropdown-active");
 
-    $(this).find(".action-item-dropdown").stop().slideDown(400);
-    $(this).addClass("dropdown-active");
+    if ($(this).hasClass("dropdown-active")) {
+      $(".dropdown-active").find(".action-item-dropdown").stop().slideDown(400);
+      $(".action-dropdown").removeClass("dropdown-active");
+
+      $(this).find(".action-item-dropdown").stop().slideUp(400);
+      $(this).removeClass("dropdown-active");
+    }else{
+       $(".dropdown-active").find(".action-item-dropdown").stop().slideUp(400);
+       $(".action-dropdown").removeClass("dropdown-active");
+
+       $(this).find(".action-item-dropdown").stop().slideDown(400);
+       $(this).addClass("dropdown-active");
+    }
 
     event.preventDefault();
   });
 
-  $(document).on("mouseleave", ".action-dropdown", function (event) {
+  $(document).on("mouseleave", ".action-dropdown .action-item-dropdown", function (event) {
     $(".dropdown-active").find(".action-item-dropdown").stop().slideUp(400);
     $(".action-dropdown").removeClass("dropdown-active");
 
