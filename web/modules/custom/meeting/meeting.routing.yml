@@ -78,6 +78,15 @@ meeting.poll_display_data:
   requirements:
      _access: 'TRUE'
 
+meeting.poll_get_by_id:
+  path: "/admin/meeting/{id}/poll/get"
+  defaults:
+    _title: "Poll"
+    _controller: '\Drupal\meeting\Controller\Poll\PollController::getById'
+  requirements:
+     _access: 'TRUE'
+
+
 meeting.poll_delete:
   path: "/admin/meeting/{id}/poll/delete"
   defaults:

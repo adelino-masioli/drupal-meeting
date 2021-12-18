@@ -8,11 +8,20 @@
    */
 
   $(document).on("click", ".edit-poll-ajax", function (event) {
-    var jsonString = JSON.parse($(this).attr("data-poll"));
-    $("input[data-drupal-selector='edit-poll-question']").val(
-      jsonString.poll_question
-    );
-    $("input[data-selector-id='poll-id']").val(jsonString.id);
+    var url = $(this).attr("data-url");
+    $.ajax({
+      url: url,
+      type: "get",
+      contentType: "application/json",
+      dataType: "text",
+      success: function (result) {
+        var data = JSON.parse(result)["data"];
+        $("input[data-selector-id='poll-id']").val(data.id);
+        $("input[data-drupal-selector='edit-poll-question']").val(data.poll_question);
+      },
+      error: function (result) {},
+    });
+
     event.preventDefault();
   });
 

@@ -67,10 +67,8 @@
             .find("input")
             .removeOnce("click-color");
         });
-    }
+    },
   };
-
-
 
   /**
    *
@@ -88,9 +86,7 @@
         order: module_id[2],
       },
       dataType: "JSON",
-      success: function (result) {
-
-      },
+      success: function (result) {},
       error: function (result) {},
     });
   });
@@ -126,11 +122,9 @@
     response,
     status
   ) {
-      // $("input[data-drupal-selector='edit-answer']").val("");
-      // $("input[data-selector-id='poll-answer-id']").val("");
-      $(response.form).each(function () {
-         $(this).find("[data-reset]").val("");
-      });
+    $(response.form).each(function () {
+      $(this).find("[data-reset]").val("");
+    });
   };
 
   /**
@@ -139,7 +133,7 @@
    * @param {*} response
    * @param {*} status
    */
-  Drupal.AjaxCommands.prototype.load_partial = function (
+  Drupal.AjaxCommands.prototype.loadPartial = function (
     ajax,
     response,
     status
@@ -152,9 +146,9 @@
       contentType: "application/json",
       dataType: "text",
       success: function (response) {
-        $(renderDiv).html(response);
+        $(renderDiv).empty().html(response);
 
-        if (response.clear){
+        if (response.refresh) {
           Drupal.settings = response[0].settings;
           Drupal.attachBehaviors($(renderDiv)[0], Drupal.settings);
         }
@@ -177,11 +171,20 @@
    */
 
   $(document).on("click", ".edit-poll-ajax", function (event) {
-    var jsonString = JSON.parse($(this).attr("data-poll"));
-    $("input[data-drupal-selector='edit-poll-question']").val(
-      jsonString.poll_question
-    );
-    $("input[data-selector-id='poll-id']").val(jsonString.id);
+    var url = $(this).attr("data-url");
+    $.ajax({
+      url: url,
+      type: "get",
+      contentType: "application/json",
+      dataType: "text",
+      success: function (result) {
+        var data = JSON.parse(result)["data"];
+        $("input[data-selector-id='poll-id']").val(data.id);
+        $("input[data-drupal-selector='edit-poll-question']").val(data.poll_question);
+      },
+      error: function (result) {},
+    });
+
     event.preventDefault();
   });
 

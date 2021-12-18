@@ -13,12 +13,14 @@ class LoadPartialCommand implements CommandInterface
   protected $form;
   protected $div;
   protected $url;
+  protected $refresh;
 
-  public function __construct($form = null, $div, $url)
+  public function __construct($form = null, $div, $url, $refresh=null)
   {
     $this->form = $form;
     $this->div = $div;
     $this->url = $url;
+    $this->refresh = $refresh;
   }
 
   /**
@@ -30,10 +32,11 @@ class LoadPartialCommand implements CommandInterface
   public function render()
   {
     return [
-      'command' => 'load_partial',
+      'command' => 'loadPartial',
       'form' => $this->form,
       'div' => $this->div,
       'url' => $this->url,
+      'refresh' => $this->refresh,
     ];
   }
 }

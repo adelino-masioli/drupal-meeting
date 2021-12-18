@@ -33,10 +33,8 @@
             .find("input")
             .removeOnce("click-color");
         });
-    }
+    },
   };
-
-
 
   /**
    *
@@ -54,9 +52,7 @@
         order: module_id[2],
       },
       dataType: "JSON",
-      success: function (result) {
-
-      },
+      success: function (result) {},
       error: function (result) {},
     });
   });
@@ -92,11 +88,9 @@
     response,
     status
   ) {
-      // $("input[data-drupal-selector='edit-answer']").val("");
-      // $("input[data-selector-id='poll-answer-id']").val("");
-      $(response.form).each(function () {
-         $(this).find("[data-reset]").val("");
-      });
+    $(response.form).each(function () {
+      $(this).find("[data-reset]").val("");
+    });
   };
 
   /**
@@ -105,7 +99,7 @@
    * @param {*} response
    * @param {*} status
    */
-  Drupal.AjaxCommands.prototype.load_partial = function (
+  Drupal.AjaxCommands.prototype.loadPartial = function (
     ajax,
     response,
     status
@@ -118,9 +112,9 @@
       contentType: "application/json",
       dataType: "text",
       success: function (response) {
-        $(renderDiv).html(response);
+        $(renderDiv).empty().html(response);
 
-        if (response.clear){
+        if (response.refresh) {
           Drupal.settings = response[0].settings;
           Drupal.attachBehaviors($(renderDiv)[0], Drupal.settings);
         }

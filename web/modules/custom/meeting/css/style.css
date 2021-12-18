@@ -1459,11 +1459,11 @@ a.btn--danger:active {
   position: relative;
 }
 
-#display_poll table tbody tr {
+#display_poll table tbody tr td {
   text-align: center;
 }
 #display_poll table tbody tr .text-left {
-  text-align: center;
+  text-align: left;
 }
 
 .result-answer-message .messages-list {
