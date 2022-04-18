@@ -70,8 +70,9 @@ class MeetingPollAnswerForm extends FormBase
     ];
 
     $form['fields']['box']['row']['id'] = [
-      '#type' => 'hidden',
-      '#attributes' => ['data-selector-id' => 'poll-answer-id']
+      '#type' => 'textfield',
+      '#attributes' => ['data-selector-id' => 'poll-answer-id'],
+      '#wrapper_attributes' => ['class' => 'hidden']
     ];
 
     $form['fields']['box']['row']['answer'] = [
@@ -85,49 +86,16 @@ class MeetingPollAnswerForm extends FormBase
       '#attributes' => ['placeholder' => 'Type a answer here', 'class' => ['col-full']],
     ];
 
-    $form['actions']['submit'] = [
+    $form['actions'] = [
       '#type' => 'submit',
       '#value' => $this->t('Save'),
+      '#attributes' => ['class' => ['action_ajax']],
       '#ajax' => [
         'callback' => '::promptCallback',
       ],
     ];
 
     return $form;
-  }
-
-
-  /**
-   * Undocumented function
-   *
-   * @param array $form
-   * @param FormStateInterface $form_state
-   * @return void
-   */
-  public function submitForm(array &$form, FormStateInterface $form_state)
-  {
-    //array data to insert on database
-    $data = array(
-      'meeting_id' =>  $form_state->getValue('meeting_id'),
-      'poll_id'    =>  $form_state->getValue('poll_id'),
-      'answer'     =>  $form_state->getValue('answer')
-    );
-
-
-    if($form_state->getValue('id')){
-      $query = \Drupal::database();
-      $query->update('poll_answer')
-        ->fields($data)
-        ->condition('id', $form_state->getValue('id'))
-        ->execute();
-
-    }else{
-      //create new poll answer
-      \Drupal::database()->insert('poll_answer')->fields($data)->execute();
-    }
-
-
-    $form_state->setRebuild();
   }
 
   /**
@@ -167,6 +135,40 @@ class MeetingPollAnswerForm extends FormBase
     }
 
     return $response;
+  }
+
+
+  /**
+   * Undocumented function
+   *
+   * @param array $form
+   * @param FormStateInterface $form_state
+   * @return void
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state)
+  {
+    //array data to insert on database
+    $data = array(
+      'meeting_id' =>  $form_state->getValue('meeting_id'),
+      'poll_id'    =>  $form_state->getValue('poll_id'),
+      'answer'     =>  $form_state->getValue('answer')
+    );
+
+
+    if($form_state->getValue('id')){
+      $query = \Drupal::database();
+      $query->update('poll_answer')
+        ->fields($data)
+        ->condition('id', $form_state->getValue('id'))
+        ->execute();
+
+    }else{
+      //create new poll answer
+      \Drupal::database()->insert('poll_answer')->fields($data)->execute();
+    }
+
+
+    $form_state->setRebuild();
   }
 
   /**

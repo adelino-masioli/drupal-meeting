@@ -76,8 +76,9 @@ class MeetingPollForm extends FormBase
     ];
 
     $form['fields']['box']['row']['id'] = [
-      '#type' => 'hidden',
-      '#attributes' => ['data-selector-id' => 'poll-id']
+      '#type' => 'textfield',
+      '#attributes' => ['data-selector-id' => 'poll-id'],
+      '#wrapper_attributes' => ['class' => 'hidden']
     ];
 
     $form['fields']['box']['row']['poll_question'] = [

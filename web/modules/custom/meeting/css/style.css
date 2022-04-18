@@ -1465,3 +1465,6 @@ a.btn--danger:active {
 #display_poll table tbody tr .text-left {
   text-align: center;
 }
+#display_poll table tbody tr .action-dropdown-wrapper {
+  display: flex;
+}

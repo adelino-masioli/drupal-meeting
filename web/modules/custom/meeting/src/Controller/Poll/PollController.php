@@ -25,7 +25,7 @@ class PollController extends ControllerBase
       'poll_question'   => array('data' => 'Poll question', 'class' => ["col-7 text-center"]),
       'allow'           => array('data' => 'Allow multiple choice', 'class' => ["col-1 text-center"]),
       'poll_control'    => array('data' => 'Poll control', 'class' => ["col-1 text-center"]),
-      'results_control' => array('data' => 'Poll control', 'class' => ["col-1 text-center"]),
+      'results_control' => array('data' => 'Results control', 'class' => ["col-1 text-center"]),
       'participant'     => array('data' => 'Participant', 'class' => ["col-1 text-center"]),
     );
 
@@ -81,7 +81,7 @@ class PollController extends ControllerBase
 
     return  array(
       'data' => new FormattableMarkup(
-        '<div class="action-dropdown">
+        '<div class="action-dropdown-wrapper"> <div class="action-dropdown">
               <div class="action-link-dropdown">&#8942;</div>
               <div class="action-item-dropdown">
                 '.Link::fromTextAndUrl(Markup::create('<i class=feather-file-text></i> @name_answer'), $link_url)->toString().'
@@ -89,7 +89,7 @@ class PollController extends ControllerBase
               </div>
            </div>
            <button class="btn btn-sm btn--primary edit-poll-ajax" data-poll="@data_edit">@name_edit</button>
-           ',
+           </div>',
         [
           '@name_edit' => 'Edit', '@data_edit' => json_encode($data),
           '@name_answer' => 'Answers', '@data_answer' => json_encode($data),
